@@ -274,6 +274,11 @@ public class AgregarProducto extends javax.swing.JFrame {
         btnAsociarCan.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnAsociarCan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/letras-de-canciones.png"))); // NOI18N
         btnAsociarCan.setText("Asociar canciones");
+        btnAsociarCan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAsociarCanActionPerformed(evt);
+            }
+        });
         getContentPane().add(btnAsociarCan, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 293, 200, -1));
 
         lbVendedor8.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
@@ -703,6 +708,14 @@ public class AgregarProducto extends javax.swing.JFrame {
                     "Debe de seleccionar el formato del disco.");
         }
     }//GEN-LAST:event_btnAgregarAlbumActionPerformed
+
+    private void btnAsociarCanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAsociarCanActionPerformed
+        AsociarCanciones can = new AsociarCanciones();
+        can.setVisible(true);
+        can.setLocationRelativeTo(null);
+        can.setResizable(false);
+        dispose();
+    }//GEN-LAST:event_btnAsociarCanActionPerformed
 
     /**
      * @param args the command line arguments

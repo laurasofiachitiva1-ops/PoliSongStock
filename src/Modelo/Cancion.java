@@ -10,6 +10,7 @@ public class Cancion {
     private double tamano_mb;
     private int calidad_kbps;
     private double precio;
+    private String autorNombre;
 
     public Cancion() {
     }
@@ -96,6 +97,13 @@ public class Cancion {
 
     public void setPrecio(double precio) {
         this.precio = precio;
+    }
+    public String getAutorNombre() {
+        return autorNombre;
+    }
+
+    public void setAutorNombre(String autorNombre) {
+        this.autorNombre = autorNombre;
     }
 
 }

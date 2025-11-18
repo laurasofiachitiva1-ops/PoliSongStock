@@ -1,8 +1,16 @@
 package Vista;
 
+import Modelo.Cancion;
+import Modelo.CancionDAO;
+import Modelo.Cancion_vinilo;
+import Modelo.Cancion_viniloDAO;
+import Modelo.Disco_mp3;
+import Modelo.Disco_mp3DAO;
 import Modelo.Disco_vinilo;
 import Modelo.Disco_viniloDAO;
+import Modelo.Sesion;
 import java.awt.Image;
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
@@ -29,13 +37,13 @@ public class AsociarCanciones extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         lbVendedor = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        btnAnadirArtista = new javax.swing.JButton();
+        btnAnadirCancion = new javax.swing.JButton();
         imgSalir = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable = new javax.swing.JTable();
         lbVendedor1 = new javax.swing.JLabel();
         txtId = new javax.swing.JTextField();
-        btnBuscar = new javax.swing.JButton();
+        btnBuscarV = new javax.swing.JButton();
         imgDisco = new javax.swing.JLabel();
         LNom = new javax.swing.JLabel();
         jlnombre = new javax.swing.JLabel();
@@ -46,6 +54,7 @@ public class AsociarCanciones extends javax.swing.JFrame {
         jLista = new javax.swing.JList<>();
         lbdiscomp3 = new javax.swing.JLabel();
         jlcan = new javax.swing.JLabel();
+        btnBuscarM = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -57,11 +66,11 @@ public class AsociarCanciones extends javax.swing.JFrame {
 
         jSeparator1.setForeground(new java.awt.Color(51, 51, 51));
 
-        btnAnadirArtista.setBackground(new java.awt.Color(204, 204, 204));
-        btnAnadirArtista.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnAnadirArtista.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/mas 15px.png"))); // NOI18N
-        btnAnadirArtista.setText("Agregar canción");
-        btnAnadirArtista.addActionListener(this::btnAnadirArtistaActionPerformed);
+        btnAnadirCancion.setBackground(new java.awt.Color(204, 204, 204));
+        btnAnadirCancion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnAnadirCancion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/mas 15px.png"))); // NOI18N
+        btnAnadirCancion.setText("Agregar canción");
+        btnAnadirCancion.addActionListener(this::btnAnadirCancionActionPerformed);
 
         imgSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/logo salir.png"))); // NOI18N
         imgSalir.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -89,11 +98,11 @@ public class AsociarCanciones extends javax.swing.JFrame {
 
         txtId.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
-        btnBuscar.setBackground(new java.awt.Color(204, 204, 204));
-        btnBuscar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/lupa 15px.png"))); // NOI18N
-        btnBuscar.setText("Buscar");
-        btnBuscar.addActionListener(this::btnBuscarActionPerformed);
+        btnBuscarV.setBackground(new java.awt.Color(204, 204, 204));
+        btnBuscarV.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnBuscarV.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/lupa 15px.png"))); // NOI18N
+        btnBuscarV.setText("Buscar vinilo");
+        btnBuscarV.addActionListener(this::btnBuscarVActionPerformed);
 
         LNom.setText("texto");
 
@@ -117,6 +126,12 @@ public class AsociarCanciones extends javax.swing.JFrame {
 
         jlcan.setText("Canciones:");
 
+        btnBuscarM.setBackground(new java.awt.Color(204, 204, 204));
+        btnBuscarM.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnBuscarM.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/lupa 15px.png"))); // NOI18N
+        btnBuscarM.setText("Buscar Mp3");
+        btnBuscarM.addActionListener(this::btnBuscarMActionPerformed);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -124,17 +139,18 @@ public class AsociarCanciones extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(lbVendedor1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 597, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lbVendedor1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnBuscarV, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnBuscarM, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jlimagen)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(imgDisco, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -163,7 +179,7 @@ public class AsociarCanciones extends javax.swing.JFrame {
                 .addGap(50, 50, 50))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(222, 222, 222)
-                .addComponent(btnAnadirArtista, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAnadirCancion, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -179,7 +195,8 @@ public class AsociarCanciones extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbVendedor1)
                     .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscar))
+                    .addComponent(btnBuscarV)
+                    .addComponent(btnBuscarM))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
                 .addComponent(lbdiscomp3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -201,7 +218,7 @@ public class AsociarCanciones extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnAnadirArtista)
+                .addComponent(btnAnadirCancion)
                 .addGap(25, 25, 25))
         );
 
@@ -222,7 +239,7 @@ public class AsociarCanciones extends javax.swing.JFrame {
         jScrollPane1.setVisible(false);
         jScrollPane2.setVisible(false);
 
-        btnAnadirArtista.setVisible(false);
+        btnAnadirCancion.setVisible(false);
 
     }
 
@@ -237,12 +254,80 @@ public class AsociarCanciones extends javax.swing.JFrame {
 
         jScrollPane1.setVisible(true);
         jScrollPane2.setVisible(true);
-        btnAnadirArtista.setVisible(true);
+        btnAnadirCancion.setVisible(true);
     }
 
-    private void btnAnadirArtistaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnadirArtistaActionPerformed
+    private void cargarCancionesDelDisco(int idDisco) {
+        Cancion_viniloDAO cavD = new Cancion_viniloDAO();
+        List<Cancion> lista = cavD.listarCancionesPorDisco(idDisco);
 
-    }//GEN-LAST:event_btnAnadirArtistaActionPerformed
+        javax.swing.DefaultListModel<String> modelo = new javax.swing.DefaultListModel<>();
+
+        for (Cancion c : lista) {
+            modelo.addElement(c.getNombre() + " - " + c.getDuracion());
+        }
+
+        jLista.setModel(modelo);
+    }
+
+
+    private void btnAnadirCancionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnadirCancionActionPerformed
+        // ================================
+        // 1. Validar id del disco
+        // ================================
+        String idTexto = txtId.getText().trim();
+        if (idTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe buscar un disco primero.");
+            return;
+        }
+
+        int idDisco;
+        try {
+            idDisco = Integer.parseInt(idTexto);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "ID inválido.");
+            return;
+        }
+
+        // ================================
+        // 2. Verificar selección de canción
+        // ================================
+        int fila = jTable.getSelectedRow();
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione una canción de la tabla.");
+            return;
+        }
+
+        int idCancion = Integer.parseInt(jTable.getValueAt(fila, 0).toString());
+
+        // ================================
+        // 3. Saber si el disco es vinilo o mp3
+        // ================================
+        String tipoDisco = lbdiscomp3.getText(); // VINILO o MP3
+
+        // ================================
+        // 4. Crear objeto de relación
+        // ================================
+        Cancion_vinilo cav = new Cancion_vinilo();
+        cav.setId_cancion(idCancion);
+        cav.setId_disco_vinilo(idDisco);
+
+        Cancion_viniloDAO cavD = new Cancion_viniloDAO();
+
+        // ================================
+        // 5. Registrar en la relación
+        // ================================
+        boolean ok = cavD.agregarCancionAVinilo(cav);
+
+        if (ok) {
+            JOptionPane.showMessageDialog(this,
+                    "Canción agregada correctamente al " + tipoDisco);
+            cargarCancionesDelDisco(idDisco);  //  <<–– actualiza jLista
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "No se pudo agregar la canción.");
+        }
+    }//GEN-LAST:event_btnAnadirCancionActionPerformed
 
     private void imgSalirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgSalirMouseClicked
         AgregarProducto prod = new AgregarProducto();
@@ -252,19 +337,100 @@ public class AsociarCanciones extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_imgSalirMouseClicked
 
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+    private void cargarCancionesEnTabla() {
+        int idVendedor = Sesion.getIdVendedor();
+
+        CancionDAO caD = new CancionDAO();
+        List<Cancion> lista = caD.listarCancionesPorVendedor(idVendedor);
+
+        String[] columnas = {"ID canción", "Autor", "Nombre", "Género", "Duración"};
+
+        javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(columnas, 0);
+
+        for (Cancion c : lista) {
+            modelo.addRow(new Object[]{
+                c.getId_cancion(),
+                c.getAutorNombre(),
+                c.getNombre(),
+                c.getGenero(),
+                c.getDuracion()
+            });
+        }
+
+        jTable.setModel(modelo);
+    }
+
+    private void cargarImagen(byte[] imgBytes) {
+
+        if (imgBytes != null && imgBytes.length > 0) {
+
+            ImageIcon icon = new ImageIcon(imgBytes);
+            Image img = icon.getImage().getScaledInstance(
+                    imgDisco.getWidth(),
+                    imgDisco.getHeight(),
+                    Image.SCALE_SMOOTH
+            );
+            imgDisco.setIcon(new ImageIcon(img));
+
+        } else {
+            // Imagen por defecto desde carpeta img
+            ImageIcon iconDefault = new ImageIcon(
+                    getClass().getResource("/img/disco.png")
+            );
+
+            Image imgDefault = iconDefault.getImage().getScaledInstance(
+                    imgDisco.getWidth(),
+                    imgDisco.getHeight(),
+                    Image.SCALE_SMOOTH
+            );
+
+            imgDisco.setIcon(new ImageIcon(imgDefault));
+        }
+    }
+
+    private void mostrarVinilo(Disco_vinilo dv) {
+
+        lbdiscomp3.setText("VINILO");
+        LNom.setText(dv.getNombre());
+        LAutor.setText(dv.getAutorNombre());
+
+        cargarImagen(dv.getImagen());
+
+        mostrarComponentes();
+        cargarCancionesEnTabla();
+        cargarCancionesDelDisco(dv.getId_disco_vinilo());
+    }
+
+    private void mostrarMp3(Disco_mp3 dm) {
+
+        lbdiscomp3.setText("MP3");
+        LNom.setText(dm.getNombre());
+        LAutor.setText(dm.getAutorNombre());
+
+        cargarImagen(dm.getImagen());
+
+        mostrarComponentes();
+        cargarCancionesEnTabla();
+    }
+
+
+    private void btnBuscarVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarVActionPerformed
         String idTexto = txtId.getText().trim();
 
+        // ==== Validar campo vacío ====
         if (idTexto.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Ingrese un ID de disco.");
             return;
         }
-
         try {
             int id = Integer.parseInt(idTexto);
+
             Disco_viniloDAO dvD = new Disco_viniloDAO();
             Disco_vinilo dv = dvD.buscarPorIdV(id);
 
+            // ============================
+            //    1. NO EXISTE VINILO
+            // ============================
             if (dv == null) {
                 imgDisco.setIcon(null);
                 ocultarComponentes();
@@ -272,50 +438,77 @@ public class AsociarCanciones extends javax.swing.JFrame {
                 return;
             }
 
-            // ==== Mostrar "VINILO" ====
-            lbdiscomp3.setText("VINILO");
+            // ============================
+            //    2. VALIDAR QUE EL DISCO
+            //       PERTENECE AL VENDEDOR
+            // ============================
+            int idUsuarioActual = Sesion.getIdVendedor();
 
-            // ==== Mostrar nombre ====
-            LNom.setText(dv.getNombre());
-
-            // ==== Mostrar autor ====
-            LAutor.setText(dv.getAutorNombre());
-
-            // ==== Mostrar imagen ====
-            byte[] imgBytes = dv.getImagen();
-
-            if (imgBytes != null && imgBytes.length > 0) {
-
-                ImageIcon icon = new ImageIcon(imgBytes);
-
-                Image img = icon.getImage().getScaledInstance(
-                        imgDisco.getWidth(),
-                        imgDisco.getHeight(),
-                        Image.SCALE_SMOOTH
-                );
-
-                imgDisco.setIcon(new ImageIcon(img));
-
-            } else {
-
-                // Cargar imagen por defecto desde carpeta img
-                ImageIcon iconDefault = new ImageIcon(getClass().getResource("/img/disco.png"));
-
-                Image imgDefault = iconDefault.getImage().getScaledInstance(
-                        imgDisco.getWidth(),
-                        imgDisco.getHeight(),
-                        Image.SCALE_SMOOTH
-                );
-
-                imgDisco.setIcon(new ImageIcon(imgDefault));
+            if (dv.getId_vendedor() != idUsuarioActual) {
+                imgDisco.setIcon(null);
+                ocultarComponentes();
+                JOptionPane.showMessageDialog(this,
+                        "No puede modificar este disco porque pertenece a otro vendedor.");
+                return;
             }
 
-            mostrarComponentes();
+            // ============================
+            //    3. MOSTRAR VINILO
+            // ============================
+            mostrarVinilo(dv);
 
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "El ID debe ser un número.");
         }
-    }//GEN-LAST:event_btnBuscarActionPerformed
+    }//GEN-LAST:event_btnBuscarVActionPerformed
+
+    private void btnBuscarMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarMActionPerformed
+        String idTexto = txtId.getText().trim();
+
+        // ==== Validar campo vacío ====
+        if (idTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese un ID de disco.");
+            return;
+        }
+        try {
+            int id = Integer.parseInt(idTexto);
+
+            Disco_mp3DAO dmD = new Disco_mp3DAO();
+            Disco_mp3 dm = dmD.buscarPorIM(id);
+
+            // ============================
+            //    1. NO EXISTE MP3
+            // ============================
+            if (dm == null) {
+                imgDisco.setIcon(null);
+                ocultarComponentes();
+                JOptionPane.showMessageDialog(this, "No existe un disco con ese ID.");
+                return;
+            }
+
+            // ============================
+            //    2. VALIDAR QUE EL DISCO
+            //       PERTENECE AL VENDEDOR
+            // ============================
+            int idUsuarioActual = Sesion.getIdVendedor();
+
+            if (dm.getId_vendedor() != idUsuarioActual) {
+                imgDisco.setIcon(null);
+                ocultarComponentes();
+                JOptionPane.showMessageDialog(this,
+                        "No puede modificar este disco porque pertenece a otro vendedor.");
+                return;
+            }
+
+            // ============================
+            //    3. MOSTRAR MP3
+            // ============================
+            mostrarMp3(dm);
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "El ID debe ser un número.");
+        }
+    }//GEN-LAST:event_btnBuscarMActionPerformed
 
     /**
      * @param args the command line arguments
@@ -345,8 +538,9 @@ public class AsociarCanciones extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel LAutor;
     private javax.swing.JLabel LNom;
-    private javax.swing.JButton btnAnadirArtista;
-    private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnAnadirCancion;
+    private javax.swing.JButton btnBuscarM;
+    private javax.swing.JButton btnBuscarV;
     private javax.swing.JLabel imgDisco;
     private javax.swing.JLabel imgSalir;
     private javax.swing.JList<String> jLista;

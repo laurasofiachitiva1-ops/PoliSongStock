@@ -77,12 +77,13 @@ public class Disco_mp3DAO {
             if (rs.next()) {
                 dm = new Disco_mp3();
                 dm.setId_disco_mp3(rs.getInt("id_disco_mp3"));
+                dm.setId_vendedor(rs.getInt("id_vendedor"));  
                 dm.setNombre(rs.getString("nombre"));
                 dm.setGenero(rs.getString("genero"));
                 dm.setAnio_salida(rs.getInt("anio_salida"));
                 dm.setPrecio(rs.getDouble("precio"));
                 dm.setImagen(rs.getBytes("imagen"));
-                dm.setAutorNombre(rs.getString("autorNombre")); // <<< NUEVO
+                dm.setAutorNombre(rs.getString("autorNombre"));
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al buscar mp3: " + e.getMessage());

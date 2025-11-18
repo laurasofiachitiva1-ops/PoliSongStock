@@ -80,6 +80,7 @@ public class Disco_viniloDAO {
             if (rs.next()) {
                 dv = new Disco_vinilo();
                 dv.setId_disco_vinilo(rs.getInt("id_disco_vinilo"));
+                dv.setId_vendedor(rs.getInt("id_vendedor"));
                 dv.setNombre(rs.getString("nombre"));
                 dv.setGenero(rs.getString("genero"));
                 dv.setAnio_salida(rs.getInt("anio_salida"));
