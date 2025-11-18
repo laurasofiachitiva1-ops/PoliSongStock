@@ -12,9 +12,10 @@ import java.sql.ResultSet;
 
 
 public class AutorDAO {
-     Connection con;
-     PreparedStatement ps;
-     Conexion cn = new Conexion();
+    Connection con;
+    PreparedStatement ps;
+    ResultSet rs;
+    Conexion cn = new Conexion();
      
     public boolean CrearAutor (Autor au){
         String sql = "INSERT INTO autor(nombre, fecha_nacimiento, nacionalidad) VALUES (?,?,?)";
@@ -59,8 +60,29 @@ public class AutorDAO {
             System.out.println(e.toString());
             }
         }
+        return lista;
+    }
+    public int obtenerIdPorNombre(String nombre) {
+        String sql = "SELECT id_autor FROM autor WHERE nombre = ?";
+        int id = -1;  // Valor por defecto si no encuentra el autor
 
-    return lista;
-}
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, nombre);
+
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                id = rs.getInt("id_autor");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error al obtener ID del autor: " + e.getMessage());
+        }
+
+        return id;
+    }
+
 
 }

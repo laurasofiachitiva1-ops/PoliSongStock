@@ -1,7 +1,8 @@
 package Vista;
 
-import Modelo.LoginDAO;
-import Modelo.login;
+import Modelo.CompradorDAO;
+import Modelo.Sesion;
+import Modelo.VendedorDAO;
 import javax.swing.JOptionPane;
 
 
@@ -9,8 +10,10 @@ public class Login extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Login.class.getName());
 
-    login lg = new login();
-    LoginDAO login = new LoginDAO();
+    Modelo.Comprador com = new Modelo.Comprador();
+    CompradorDAO comD = new CompradorDAO();
+    Modelo.Vendedor ven = new Modelo.Vendedor();
+    VendedorDAO venD = new VendedorDAO();
     
     public Login() {
         initComponents();
@@ -37,32 +40,51 @@ public class Login extends javax.swing.JFrame {
         String correo = txtUsuario.getText();
         String password = String.valueOf(txtContrasena.getPassword());
         
-        if ("".equals(correo) || "".equals(password)) {
+        
+        if (correo.equals("") || password.equals("")) {
             JOptionPane.showMessageDialog(null, "Por favor, llene los campos");
-        } else {
-            lg = login.log(correo, password);
-            if (lg.getCorreo() != null && lg.getPassword() != null) {
-                switch (lg.getTipo_usuario()) {
-                     case "Comprador":
-                    Comprador comprador = new Comprador();
-                    comprador.setVisible(true);
-                    comprador.setLocationRelativeTo(null);
-                    comprador.setResizable(false);
-                    dispose();
-                    break;
-
-                    case "Vendedor":
-                    Vendedor vendedor = new Vendedor();
-                    vendedor.setVisible(true);
-                    vendedor.setLocationRelativeTo(null);
-                    vendedor.setResizable(false);
-                    dispose();
-                    break;
-                }    
-            } else {
-                JOptionPane.showMessageDialog(null, "Correo o contraseña incorrecta");
-            }
+            return;
         }
+
+        // ----- 1. BUSCAR EN TABLA COMPRADOR -----
+        Modelo.Comprador c = comD.logC(correo, password);
+        
+
+        if (c.getId_comprador() != 0) {
+            // SI ES COMPRADOR
+            JOptionPane.showMessageDialog(null, "Bienvenido comprador: " + c.getNombre());
+            
+            Sesion.setIdComprador(c.getId_comprador());//Guardar el id del comprador
+            
+            JOptionPane.showMessageDialog(null, "Bienvenido comprador: " + c.getId_comprador());
+
+            Comprador comprador = new Comprador();
+            comprador.setVisible(true);
+            comprador.setLocationRelativeTo(null);
+            comprador.setResizable(false);
+            dispose();
+            return;
+        }
+
+        // ----- 2. BUSCAR EN TABLA VENDEDOR -----
+        Modelo.Vendedor v = venD.logV(correo, password);
+
+        if (v.getId_vendedor() != 0) {
+            // SI ES VENDEDOR
+            JOptionPane.showMessageDialog(null, "Bienvenido vendedor: " + v.getNombre());
+            
+            Sesion.setIdVendedor(v.getId_vendedor());//Guardar el id del comprador
+
+            Vendedor vendedor = new Vendedor();
+            vendedor.setVisible(true);
+            vendedor.setLocationRelativeTo(null);
+            vendedor.setResizable(false);
+            dispose();
+            return;
+        }
+
+        // ----- 3. SI NO EXISTE EN NINGUNA TABLA -----
+        JOptionPane.showMessageDialog(null, "Correo o contraseña incorrecta");
     }
     
     @SuppressWarnings("unchecked")
@@ -199,8 +221,8 @@ public class Login extends javax.swing.JFrame {
 
     private void lbCrearCuentaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbCrearCuentaMouseClicked
         CreateAccount cre = new CreateAccount();
+        cre.pack();
         cre.setVisible(true);
-        cre.setSize(this.getSize());
         cre.setLocationRelativeTo(null);
         cre.setResizable(false); 
         dispose();

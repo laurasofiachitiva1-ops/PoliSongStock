@@ -1,39 +1,29 @@
 package Modelo;
 
-public class login {
-    private int id_usuario;
-    private String tipo_usuario;
+public class Comprador {
+    private int id_comprador;
     private String nombre;
     private String correo;
     private String direccion;
     private String password;
 
-    public login() {
+    public Comprador() {
     }
 
-    public login(int id_usuario, String tipo_usuario, String nombre, String correo, String direccion, String password) {
-        this.id_usuario = id_usuario;
-        this.tipo_usuario = tipo_usuario;
+    public Comprador(int id_comprador, String nombre, String correo, String direccion, String password) {
+        this.id_comprador = id_comprador;
         this.nombre = nombre;
         this.correo = correo;
         this.direccion = direccion;
         this.password = password;
     }
 
-    public int getId_usuario() {
-        return id_usuario;
+    public int getId_comprador() {
+        return id_comprador;
     }
 
-    public void setId_usuario(int id_usuario) {
-        this.id_usuario = id_usuario;
-    }
-
-    public String getTipo_usuario() {
-        return tipo_usuario;
-    }
-
-    public void setTipo_usuario(String tipo_usuario) {
-        this.tipo_usuario = tipo_usuario;
+    public void setId_comprador(int id_comprador) {
+        this.id_comprador = id_comprador;
     }
 
     public String getNombre() {
@@ -67,6 +57,5 @@ public class login {
     public void setPassword(String password) {
         this.password = password;
     }
-    
     
 }

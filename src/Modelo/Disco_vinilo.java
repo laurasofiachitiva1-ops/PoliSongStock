@@ -1,37 +1,36 @@
 package Modelo;
 
-public class Disco_mp3 {
-    private int id_disco_mp3;
+public class Disco_vinilo {
+
+    private int id_disco_vinilo;
     private int id_autor;
     private int id_vendedor;
     private String nombre;
     private String genero;
     private int anio_salida;
     private double precio;
-    private byte [] imagen;
+    private int cantidad;
+    private byte[] imagen;
     private String autorNombre;
 
-    public Disco_mp3() {
-    
-    }
-
-    public Disco_mp3(int id_disco_mp3, int id_autor, int id_vendedor, String nombre, String genero, int anio_salida, double precio, byte[] imagen) {
-        this.id_disco_mp3 = id_disco_mp3;
+    public Disco_vinilo(int id_disco_vinilo, int id_autor, int id_vendedor, String nombre, String genero, int anio_salida, double precio, int cantidad, byte[] imagen) {
+        this.id_disco_vinilo = id_disco_vinilo;
         this.id_autor = id_autor;
         this.id_vendedor = id_vendedor;
         this.nombre = nombre;
         this.genero = genero;
         this.anio_salida = anio_salida;
         this.precio = precio;
+        this.cantidad = cantidad;
         this.imagen = imagen;
     }
 
-    public int getId_disco_mp3() {
-        return id_disco_mp3;
+    public int getId_disco_vinilo() {
+        return id_disco_vinilo;
     }
 
-    public void setId_disco_mp3(int id_disco_mp3) {
-        this.id_disco_mp3 = id_disco_mp3;
+    public void setId_disco_vinilo(int id_disco_vinilo) {
+        this.id_disco_vinilo = id_disco_vinilo;
     }
 
     public int getId_autor() {
@@ -82,6 +81,14 @@ public class Disco_mp3 {
         this.precio = precio;
     }
 
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+
     public byte[] getImagen() {
         return imagen;
     }
@@ -89,7 +96,7 @@ public class Disco_mp3 {
     public void setImagen(byte[] imagen) {
         this.imagen = imagen;
     }
-    
+
     public String getAutorNombre() {
         return autorNombre;
     }
@@ -97,5 +104,9 @@ public class Disco_mp3 {
     public void setAutorNombre(String autorNombre) {
         this.autorNombre = autorNombre;
     }
-    
+
+    public Disco_vinilo() {
+
+    }
+
 }

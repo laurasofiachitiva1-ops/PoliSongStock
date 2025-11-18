@@ -1,14 +1,18 @@
 package Vista;
 
-import Modelo.UsuarioDAO;
-import Modelo.login;
+import Modelo.CompradorDAO;
+import Modelo.Comprador;
+import Modelo.Vendedor;
+import Modelo.VendedorDAO;
 import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
 
 public class CreateAccount extends javax.swing.JFrame {
 
-    login lg = new login();
-    UsuarioDAO usu = new UsuarioDAO();
+    Comprador com = new Comprador();
+    CompradorDAO comD = new CompradorDAO();
+    Vendedor ven = new Vendedor();
+    VendedorDAO venD = new VendedorDAO();
     
     public CreateAccount() {
         initComponents();
@@ -36,7 +40,7 @@ public class CreateAccount extends javax.swing.JFrame {
         jlCrearCuenta = new javax.swing.JLabel();
         lbContrasenac = new javax.swing.JLabel();
         txtContrasenaC = new javax.swing.JPasswordField();
-        txtUsuarioC = new javax.swing.JTextField();
+        txtDireccionC = new javax.swing.JTextField();
         btnRegistrarse = new javax.swing.JButton();
         lbemail = new javax.swing.JLabel();
         txtEmail = new javax.swing.JTextField();
@@ -45,13 +49,13 @@ public class CreateAccount extends javax.swing.JFrame {
         lbConContrasena = new javax.swing.JLabel();
         rdbVendedor = new javax.swing.JRadioButton();
         rdbComprador = new javax.swing.JRadioButton();
+        lbdireccion = new javax.swing.JLabel();
+        txtUsuarioC = new javax.swing.JTextField();
         imLogoPolic = new javax.swing.JLabel();
         imgSalir = new javax.swing.JLabel();
 
-        setMaximumSize(new java.awt.Dimension(2147483647, 2147483647));
         setMinimumSize(new java.awt.Dimension(710, 400));
-        setPreferredSize(new java.awt.Dimension(710, 400));
-        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jpfondocreate.setBackground(new java.awt.Color(51, 51, 51));
         jpfondocreate.setPreferredSize(new java.awt.Dimension(710, 400));
@@ -68,9 +72,15 @@ public class CreateAccount extends javax.swing.JFrame {
         lbContrasenac.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lbContrasenac.setText("Contraseña");
 
-        txtUsuarioC.addActionListener(new java.awt.event.ActionListener() {
+        txtContrasenaC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtUsuarioCActionPerformed(evt);
+                txtContrasenaCActionPerformed(evt);
+            }
+        });
+
+        txtDireccionC.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDireccionCActionPerformed(evt);
             }
         });
 
@@ -92,8 +102,22 @@ public class CreateAccount extends javax.swing.JFrame {
         lbConContrasena.setText("Confirmar contraseña");
 
         rdbVendedor.setText("Vendedor");
+        rdbVendedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdbVendedorActionPerformed(evt);
+            }
+        });
 
         rdbComprador.setText("Comprador");
+
+        lbdireccion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbdireccion.setText("Dirección");
+
+        txtUsuarioC.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtUsuarioCActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jpCrearCuentaLayout = new javax.swing.GroupLayout(jpCrearCuenta);
         jpCrearCuenta.setLayout(jpCrearCuentaLayout);
@@ -102,27 +126,29 @@ public class CreateAccount extends javax.swing.JFrame {
             .addGroup(jpCrearCuentaLayout.createSequentialGroup()
                 .addGroup(jpCrearCuentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jpCrearCuentaLayout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addGroup(jpCrearCuentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtContrasenaC, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbContrasenac)
-                            .addComponent(lbUsuarioc)
-                            .addComponent(txtUsuarioC, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbemail)
-                            .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbConContrasena)
-                            .addComponent(lbtipocuenta)
-                            .addGroup(jpCrearCuentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(jpCrearCuentaLayout.createSequentialGroup()
-                                    .addGroup(jpCrearCuentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(rdbComprador)
-                                        .addComponent(rdbVendedor))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnRegistrarse))
-                                .addComponent(txtConfContrasena, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jpCrearCuentaLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jlCrearCuenta)))
+                        .addComponent(jlCrearCuenta))
+                    .addGroup(jpCrearCuentaLayout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addGroup(jpCrearCuentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(jpCrearCuentaLayout.createSequentialGroup()
+                                .addGroup(jpCrearCuentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(rdbComprador)
+                                    .addComponent(rdbVendedor))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnRegistrarse))
+                            .addGroup(jpCrearCuentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(txtContrasenaC, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lbContrasenac)
+                                .addComponent(lbUsuarioc)
+                                .addComponent(txtDireccionC, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lbemail)
+                                .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lbConContrasena)
+                                .addComponent(lbtipocuenta)
+                                .addComponent(txtConfContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lbdireccion)
+                                .addComponent(txtUsuarioC, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(40, Short.MAX_VALUE))
         );
         jpCrearCuentaLayout.setVerticalGroup(
@@ -138,6 +164,10 @@ public class CreateAccount extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbdireccion)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtDireccionC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbContrasenac)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtContrasenaC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -147,14 +177,14 @@ public class CreateAccount extends javax.swing.JFrame {
                 .addComponent(txtConfContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbtipocuenta)
-                .addGap(6, 6, 6)
-                .addGroup(jpCrearCuentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jpCrearCuentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jpCrearCuentaLayout.createSequentialGroup()
                         .addComponent(rdbComprador)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(rdbVendedor))
-                    .addComponent(btnRegistrarse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 24, Short.MAX_VALUE))
+                    .addComponent(btnRegistrarse, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         imLogoPolic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/Logo PoliSong.png"))); // NOI18N
@@ -184,21 +214,21 @@ public class CreateAccount extends javax.swing.JFrame {
             jpfondocreateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpfondocreateLayout.createSequentialGroup()
                 .addComponent(imgSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
                 .addComponent(imLogoPolic, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40))
             .addGroup(jpfondocreateLayout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addComponent(jpCrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(23, 23, 23)
+                .addComponent(jpCrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, 422, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        add(jpfondocreate, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 710, 400));
+        getContentPane().add(jpfondocreate, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 710, 460));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtUsuarioCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsuarioCActionPerformed
+    private void txtDireccionCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDireccionCActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtUsuarioCActionPerformed
+    }//GEN-LAST:event_txtDireccionCActionPerformed
 
     private void imgSalirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgSalirMouseClicked
         Login log = new Login();
@@ -208,13 +238,13 @@ public class CreateAccount extends javax.swing.JFrame {
 
     private void btnRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarseActionPerformed
      
-        String usuario = txtUsuarioC.getText().trim();
+        String usuario = txtDireccionC.getText().trim();
         String email = txtEmail.getText().trim();
         String contrasena = String.valueOf(txtContrasenaC.getPassword());
         String confirmar = String.valueOf(txtConfContrasena.getPassword());
-        String tipoUsuario = "";
+        String direccion = txtDireccionC.getText().trim();
 
-        if (usuario.isEmpty() || email.isEmpty() || contrasena.isEmpty() || confirmar.isEmpty()) {
+        if (usuario.isEmpty() || email.isEmpty() || contrasena.isEmpty() || confirmar.isEmpty() || direccion.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Por favor, llene todos los campos");
             return;
         }
@@ -226,18 +256,28 @@ public class CreateAccount extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden");
             return;
         }
+        // Dependiendo del tipo de cuenta
+        boolean registroExitoso = false;
+
         if (rdbComprador.isSelected()) {
-            tipoUsuario = "Comprador";
+            // Configurar objeto Comprador
+            com.setNombre(usuario);
+            com.setCorreo(email);
+            com.setPassword(contrasena);
+            com.setDireccion(direccion);
+
+            // Llamar al DAO de Comprador
+            registroExitoso = comD.CrearComprador(com);
+
         } else if (rdbVendedor.isSelected()) {
-            tipoUsuario = "Vendedor";
+            // Configurar objeto Vendedor
+            ven.setNombre(usuario);
+            ven.setCorreo(email);
+            ven.setPassword(contrasena);
+            ven.setDireccion(direccion);
+            // Llamar al DAO de Vendedor
+            registroExitoso = venD.CrearVendedor(ven);
         }
-
-        lg.setNombre(usuario);
-        lg.setCorreo(email);
-        lg.setPassword(contrasena);
-        lg.setTipo_usuario(tipoUsuario);
-
-        boolean registroExitoso = usu.CrearUsuario(lg);
 
         if (registroExitoso) {
             JOptionPane.showMessageDialog(null, "Usuario creado correctamente");
@@ -248,6 +288,18 @@ public class CreateAccount extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error al crear el usuario. Intente nuevamente.");
         }           
     }//GEN-LAST:event_btnRegistrarseActionPerformed
+
+    private void txtContrasenaCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtContrasenaCActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtContrasenaCActionPerformed
+
+    private void rdbVendedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbVendedorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rdbVendedorActionPerformed
+
+    private void txtUsuarioCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsuarioCActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtUsuarioCActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -260,12 +312,14 @@ public class CreateAccount extends javax.swing.JFrame {
     private javax.swing.JLabel lbConContrasena;
     private javax.swing.JLabel lbContrasenac;
     private javax.swing.JLabel lbUsuarioc;
+    private javax.swing.JLabel lbdireccion;
     private javax.swing.JLabel lbemail;
     private javax.swing.JLabel lbtipocuenta;
     private javax.swing.JRadioButton rdbComprador;
     private javax.swing.JRadioButton rdbVendedor;
     private javax.swing.JPasswordField txtConfContrasena;
     private javax.swing.JPasswordField txtContrasenaC;
+    private javax.swing.JTextField txtDireccionC;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtUsuarioC;
     // End of variables declaration//GEN-END:variables
