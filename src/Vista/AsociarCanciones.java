@@ -2,6 +2,8 @@ package Vista;
 
 import Modelo.Cancion;
 import Modelo.CancionDAO;
+import Modelo.Cancion_disco_mp3;
+import Modelo.Cancion_disco_mp3DAO;
 import Modelo.Cancion_vinilo;
 import Modelo.Cancion_viniloDAO;
 import Modelo.Disco_mp3;
@@ -257,9 +259,22 @@ public class AsociarCanciones extends javax.swing.JFrame {
         btnAnadirCancion.setVisible(true);
     }
 
-    private void cargarCancionesDelDisco(int idDisco) {
+    private void cargarCancionesDelVinilo(int idVinilo) {
         Cancion_viniloDAO cavD = new Cancion_viniloDAO();
-        List<Cancion> lista = cavD.listarCancionesPorDisco(idDisco);
+        List<Cancion> lista = cavD.listarCancionesPorVinilo(idVinilo);
+
+        javax.swing.DefaultListModel<String> modelo = new javax.swing.DefaultListModel<>();
+
+        for (Cancion c : lista) {
+            modelo.addElement(c.getNombre() + " - " + c.getDuracion());
+        }
+
+        jLista.setModel(modelo);
+    }
+
+    private void cargarCancionesDelMp3(int idMp3) {
+        Cancion_disco_mp3DAO camD = new Cancion_disco_mp3DAO();
+        List<Cancion> lista = camD.listarCancionesPorMp3(idMp3);
 
         javax.swing.DefaultListModel<String> modelo = new javax.swing.DefaultListModel<>();
 
@@ -301,31 +316,52 @@ public class AsociarCanciones extends javax.swing.JFrame {
         int idCancion = Integer.parseInt(jTable.getValueAt(fila, 0).toString());
 
         // ================================
-        // 3. Saber si el disco es vinilo o mp3
+        // 3. Saber si es VINILO o MP3
         // ================================
         String tipoDisco = lbdiscomp3.getText(); // VINILO o MP3
 
-        // ================================
-        // 4. Crear objeto de relación
-        // ================================
-        Cancion_vinilo cav = new Cancion_vinilo();
-        cav.setId_cancion(idCancion);
-        cav.setId_disco_vinilo(idDisco);
+        boolean ok = false;
 
-        Cancion_viniloDAO cavD = new Cancion_viniloDAO();
+        if (tipoDisco.equalsIgnoreCase("VINILO")) {
+
+            // ================================
+            // 4. Agregar a cancion_vinilo
+            // ================================
+            Cancion_vinilo cav = new Cancion_vinilo();
+            cav.setId_cancion(idCancion);
+            cav.setId_disco_vinilo(idDisco);
+
+            Cancion_viniloDAO cavD = new Cancion_viniloDAO();
+            ok = cavD.agregarCancionAVinilo(cav);
+
+            if (ok) {
+                cargarCancionesDelVinilo(idDisco);
+            }
+
+        } else if (tipoDisco.equalsIgnoreCase("MP3")) {
+
+            // ================================
+            // 5. Agregar a disco_cancion
+            // ================================
+            Cancion_disco_mp3 cmp3 = new Cancion_disco_mp3();
+            cmp3.setId_cancion(idCancion);
+            cmp3.setId_disco_mp3(idDisco);
+
+            Cancion_disco_mp3DAO cmp3D = new Cancion_disco_mp3DAO();
+            ok = cmp3D.agregarCancionAMp3(cmp3);
+
+            if (ok) {
+                cargarCancionesDelMp3(idDisco);
+            }
+        }
 
         // ================================
-        // 5. Registrar en la relación
+        // 6. Mensaje final
         // ================================
-        boolean ok = cavD.agregarCancionAVinilo(cav);
-
         if (ok) {
-            JOptionPane.showMessageDialog(this,
-                    "Canción agregada correctamente al " + tipoDisco);
-            cargarCancionesDelDisco(idDisco);  //  <<–– actualiza jLista
+            JOptionPane.showMessageDialog(this, "Canción agregada correctamente al " + tipoDisco);
         } else {
-            JOptionPane.showMessageDialog(this,
-                    "No se pudo agregar la canción.");
+            JOptionPane.showMessageDialog(this, "No se pudo agregar la canción.");
         }
     }//GEN-LAST:event_btnAnadirCancionActionPerformed
 
@@ -398,7 +434,7 @@ public class AsociarCanciones extends javax.swing.JFrame {
 
         mostrarComponentes();
         cargarCancionesEnTabla();
-        cargarCancionesDelDisco(dv.getId_disco_vinilo());
+        cargarCancionesDelVinilo(dv.getId_disco_vinilo());
     }
 
     private void mostrarMp3(Disco_mp3 dm) {
@@ -411,6 +447,7 @@ public class AsociarCanciones extends javax.swing.JFrame {
 
         mostrarComponentes();
         cargarCancionesEnTabla();
+        cargarCancionesDelMp3(dm.getId_disco_mp3());
     }
 
 

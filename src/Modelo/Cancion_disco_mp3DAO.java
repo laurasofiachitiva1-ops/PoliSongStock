@@ -2,26 +2,27 @@ package Modelo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
-import java.sql.ResultSet;
 
-public class Cancion_viniloDAO {
+public class Cancion_disco_mp3DAO {
+
     Conexion cn = new Conexion();
     Connection con;
     PreparedStatement ps;
     ResultSet rs;
 
-    public boolean agregarCancionAVinilo(Cancion_vinilo cav) {
-        String sql = "INSERT INTO cancion_vinilo (id_cancion, id_disco_vinilo) VALUES (?, ?)";
+    public boolean agregarCancionAMp3(Cancion_disco_mp3 cam) {
+        String sql = "INSERT INTO cancion_disco_mp3 (id_cancion, id_disco_mp3) VALUES (?, ?)";
 
         try {
             con = cn.getConnection();
             ps = con.prepareStatement(sql);
-            ps.setInt(1, cav.getId_cancion());
-            ps.setInt(2, cav.getId_disco_vinilo());
+            ps.setInt(1, cam.getId_cancion());
+            ps.setInt(2, cam.getId_disco_mp3());
 
             ps.executeUpdate();
             return true;
@@ -32,17 +33,17 @@ public class Cancion_viniloDAO {
         }
     }
 
-    public List<Cancion> listarCancionesPorVinilo(int idVinilo) {
+    public List<Cancion> listarCancionesPorMp3(int idMp3) {
         List<Cancion> lista = new ArrayList<>();
         String sql = "SELECT c.id_cancion, c.nombre, c.duracion "
-                   + "FROM cancion_vinilo cv "
-                   + "INNER JOIN cancion c ON cv.id_cancion = c.id_cancion "
-                   + "WHERE cv.id_disco_vinilo = ?";
+                + "FROM cancion_disco_mp3 cv "
+                + "INNER JOIN cancion c ON cv.id_cancion = c.id_cancion "
+                + "WHERE cv.id_disco_mp3 = ?";
 
         try {
             con = cn.getConnection();
             ps = con.prepareStatement(sql);
-            ps.setInt(1, idVinilo);
+            ps.setInt(1, idMp3);
             rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -57,24 +58,5 @@ public class Cancion_viniloDAO {
             JOptionPane.showMessageDialog(null, e.toString());
         }
         return lista;
-    }
-
-    // ELIMINAR RELACIÓN (si el usuario quita una canción del disco)
-    public boolean eliminarCancionDeDisco(int idDisco, int idCancion) {
-        String sql = "DELETE FROM disco_cancion WHERE id_disco = ? AND id_cancion = ?";
-
-        try {
-            con = cn.getConnection();
-            ps = con.prepareStatement(sql);
-            ps.setInt(1, idDisco);
-            ps.setInt(2, idCancion);
-
-            ps.executeUpdate();
-            return true;
-
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error eliminando canción: ");
-            return false;
-        }
     }
 }
