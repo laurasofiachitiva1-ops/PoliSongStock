@@ -59,4 +59,43 @@ public class Cancion_disco_mp3DAO {
         }
         return lista;
     }
+
+    public boolean eliminarCancionDeMp3(int idMp3, int idCancion) {
+        String sql = "DELETE FROM cancion_disco_mp3 WHERE id_disco_mp3 = ? AND id_cancion = ?";
+
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, idMp3);
+            ps.setInt(2, idCancion);
+
+            ps.executeUpdate();
+            return true;
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.toString());
+            return false;
+        }
+    }
+
+    public boolean existeCancionEnMp3(int idMp3, int idCancion) {
+        String sql = "SELECT COUNT(*) FROM cancion_disco_mp3 WHERE id_disco_mp3 = ? AND id_cancion = ?";
+
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, idMp3);
+            ps.setInt(2, idCancion);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.toString());
+        }
+
+        return false;
+    }
+
 }

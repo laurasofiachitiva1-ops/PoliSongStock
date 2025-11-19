@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 import java.sql.ResultSet;
 
 public class Cancion_viniloDAO {
+
     Conexion cn = new Conexion();
     Connection con;
     PreparedStatement ps;
@@ -35,9 +36,9 @@ public class Cancion_viniloDAO {
     public List<Cancion> listarCancionesPorVinilo(int idVinilo) {
         List<Cancion> lista = new ArrayList<>();
         String sql = "SELECT c.id_cancion, c.nombre, c.duracion "
-                   + "FROM cancion_vinilo cv "
-                   + "INNER JOIN cancion c ON cv.id_cancion = c.id_cancion "
-                   + "WHERE cv.id_disco_vinilo = ?";
+                + "FROM cancion_vinilo cv "
+                + "INNER JOIN cancion c ON cv.id_cancion = c.id_cancion "
+                + "WHERE cv.id_disco_vinilo = ?";
 
         try {
             con = cn.getConnection();
@@ -59,22 +60,43 @@ public class Cancion_viniloDAO {
         return lista;
     }
 
-    // ELIMINAR RELACIÓN (si el usuario quita una canción del disco)
-    public boolean eliminarCancionDeDisco(int idDisco, int idCancion) {
-        String sql = "DELETE FROM disco_cancion WHERE id_disco = ? AND id_cancion = ?";
+    // ELIMINAR 
+    public boolean eliminarCancionDeVinilo(int idVinilo, int idCancion) {
+        String sql = "DELETE FROM cancion_vinilo WHERE id_disco_vinilo = ? AND id_cancion = ?";
 
         try {
             con = cn.getConnection();
             ps = con.prepareStatement(sql);
-            ps.setInt(1, idDisco);
+            ps.setInt(1, idVinilo);
             ps.setInt(2, idCancion);
 
             ps.executeUpdate();
             return true;
 
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error eliminando canción: ");
+            JOptionPane.showMessageDialog(null, e.toString());
             return false;
         }
     }
+
+    public boolean existeCancionEnVinilo(int idVinilo, int idCancion) {
+        String sql = "SELECT COUNT(*) FROM cancion_vinilo WHERE id_disco_vinilo = ? AND id_cancion = ?";
+
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, idVinilo);
+            ps.setInt(2, idCancion);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.toString());
+        }
+
+        return false;
+    }
+
 }

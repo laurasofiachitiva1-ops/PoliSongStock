@@ -11,6 +11,7 @@ import Modelo.Disco_mp3DAO;
 import Modelo.Disco_vinilo;
 import Modelo.Disco_viniloDAO;
 import Modelo.Sesion;
+import java.awt.Color;
 import java.awt.Image;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -27,6 +28,48 @@ public class AsociarCanciones extends javax.swing.JFrame {
         jLista.setModel(new javax.swing.DefaultListModel<>());
         // Cursor tipo mano en el label de salir
         imgSalir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        // Cursor tipo mano en el botón buscar vinilo
+        btnBuscarV.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnBuscarV.setText("<html><center>Buscar<br>Vinilo</center></html>");
+        // Cursor tipo mano en el botón buscar mp3
+        btnBuscarM.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnBuscarM.setText("<html><center>Buscar<br>MP3</center></html>");
+        // Cursor tipo mano en el botón añadir cancion
+        btnAnadirCancion.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        // Cursor tipo mano en el botón añadir cancion
+        btnBorrarCancion.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnBorrarCancion.setText("<html><center>Borrar<br>Canción</center></html>");
+
+        // COLOR DE FONDO PARA EL HEADER
+        javax.swing.table.JTableHeader header = jTable.getTableHeader();
+        header.setDefaultRenderer(new javax.swing.table.DefaultTableCellRenderer() {
+            @Override
+            public java.awt.Component getTableCellRendererComponent(
+                    javax.swing.JTable table, Object value, boolean isSelected,
+                    boolean hasFocus, int row, int column) {
+
+                java.awt.Component c = super.getTableCellRendererComponent(
+                        table, value, isSelected, hasFocus, row, column);
+                jTable.getTableHeader().setBackground(new java.awt.Color(89, 89, 89));
+
+                jScrollPane2.getViewport().setBackground(new java.awt.Color(89, 89, 89));
+                c.setBackground(new java.awt.Color(89, 89, 89));
+                c.setForeground(Color.WHITE);
+                setHorizontalAlignment(CENTER);
+                return c;
+            }
+        });
+
+        // MOSTRAR EL BOTON PARA BORRAR LA CANCION DE LA LISTA
+        jLista.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                if (jLista.getSelectedIndex() != -1) {
+                    btnBorrarCancion.setVisible(true);
+                } else {
+                    btnBorrarCancion.setVisible(false);
+                }
+            }
+        });
     }
 
     /**
@@ -59,6 +102,8 @@ public class AsociarCanciones extends javax.swing.JFrame {
         lbdiscomp3 = new javax.swing.JLabel();
         jlcan = new javax.swing.JLabel();
         btnBuscarM = new javax.swing.JButton();
+        lbtitulo2 = new javax.swing.JLabel();
+        btnBorrarCancion = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -83,6 +128,7 @@ public class AsociarCanciones extends javax.swing.JFrame {
             }
         });
 
+        jTable.setBackground(new java.awt.Color(89, 89, 89));
         jTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
@@ -95,12 +141,14 @@ public class AsociarCanciones extends javax.swing.JFrame {
                 "ID canción", "Autor", "Nombre", "Género", "duración"
             }
         ));
+        jTable.setGridColor(new java.awt.Color(89, 89, 89));
+        jTable.setSelectionBackground(new java.awt.Color(51, 51, 51));
         jScrollPane2.setViewportView(jTable);
 
         lbVendedor1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lbVendedor1.setText("Digite el ID del disco creado:");
 
-        txtId.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtId.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
         btnBuscarV.setBackground(new java.awt.Color(204, 204, 204));
         btnBuscarV.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -108,6 +156,7 @@ public class AsociarCanciones extends javax.swing.JFrame {
         btnBuscarV.setText("Buscar vinilo");
         btnBuscarV.addActionListener(this::btnBuscarVActionPerformed);
 
+        LNom.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         LNom.setText("texto");
 
         jlnombre.setText("Nombre del disco:");
@@ -116,16 +165,19 @@ public class AsociarCanciones extends javax.swing.JFrame {
 
         jlimagen.setText("Imagen:");
 
+        LAutor.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         LAutor.setText("texto");
 
+        jLista.setBackground(new java.awt.Color(89, 89, 89));
         jLista.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        jLista.setSelectionBackground(new java.awt.Color(51, 51, 51));
         jScrollPane1.setViewportView(jLista);
 
-        lbdiscomp3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbdiscomp3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lbdiscomp3.setText("texto");
 
         jlcan.setText("Canciones:");
@@ -135,6 +187,15 @@ public class AsociarCanciones extends javax.swing.JFrame {
         btnBuscarM.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/lupa 15px.png"))); // NOI18N
         btnBuscarM.setText("Buscar Mp3");
         btnBuscarM.addActionListener(this::btnBuscarMActionPerformed);
+
+        lbtitulo2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lbtitulo2.setText("Canciones disponibles para agregar");
+
+        btnBorrarCancion.setBackground(new java.awt.Color(204, 204, 204));
+        btnBorrarCancion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnBorrarCancion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/borrar.png"))); // NOI18N
+        btnBorrarCancion.setText("Borrar Canción");
+        btnBorrarCancion.addActionListener(this::btnBorrarCancionActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -160,15 +221,20 @@ public class AsociarCanciones extends javax.swing.JFrame {
                                 .addComponent(imgDisco, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jlautor, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(LAutor, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(jlcan, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(18, 18, 18)
+                                            .addComponent(btnBorrarCancion, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                            .addComponent(jlautor, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(LAutor, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                             .addComponent(lbdiscomp3, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 566, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(27, Short.MAX_VALUE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 566, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbtitulo2))))
+                .addContainerGap(7, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(146, 146, 146)
                 .addComponent(jlnombre, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -182,7 +248,7 @@ public class AsociarCanciones extends javax.swing.JFrame {
                 .addComponent(imgSalir)
                 .addGap(50, 50, 50))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(222, 222, 222)
+                .addGap(220, 220, 220)
                 .addComponent(btnAnadirCancion, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -196,12 +262,14 @@ public class AsociarCanciones extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbVendedor1)
-                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscarV)
-                    .addComponent(btnBuscarM))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnBuscarM, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnBuscarV, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lbVendedor1)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbdiscomp3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -217,16 +285,20 @@ public class AsociarCanciones extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jlcan)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnBorrarCancion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)))
                     .addComponent(imgDisco, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addComponent(lbtitulo2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnAnadirCancion)
-                .addGap(25, 25, 25))
+                .addGap(18, 18, 18))
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 630, 590));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 610, 630));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -239,11 +311,13 @@ public class AsociarCanciones extends javax.swing.JFrame {
         jlnombre.setVisible(false);
         jlautor.setVisible(false);
         jlcan.setVisible(false);
+        lbtitulo2.setVisible(false);
 
         jScrollPane1.setVisible(false);
         jScrollPane2.setVisible(false);
 
         btnAnadirCancion.setVisible(false);
+        btnBorrarCancion.setVisible(false);
 
     }
 
@@ -255,6 +329,7 @@ public class AsociarCanciones extends javax.swing.JFrame {
         jlnombre.setVisible(true);
         jlautor.setVisible(true);
         jlcan.setVisible(true);
+        lbtitulo2.setVisible(true);
 
         jScrollPane1.setVisible(true);
         jScrollPane2.setVisible(true);
@@ -268,7 +343,9 @@ public class AsociarCanciones extends javax.swing.JFrame {
         javax.swing.DefaultListModel<String> modelo = new javax.swing.DefaultListModel<>();
 
         for (Cancion c : lista) {
-            modelo.addElement(c.getNombre() + " - " + c.getDuracion());
+            modelo.addElement(
+                    c.getId_cancion() + " - " + c.getNombre() + " - " + c.getDuracion()
+            );
         }
 
         jLista.setModel(modelo);
@@ -281,7 +358,9 @@ public class AsociarCanciones extends javax.swing.JFrame {
         javax.swing.DefaultListModel<String> modelo = new javax.swing.DefaultListModel<>();
 
         for (Cancion c : lista) {
-            modelo.addElement(c.getNombre() + " - " + c.getDuracion());
+            modelo.addElement(
+                    c.getId_cancion() + " - " + c.getNombre() + " - " + c.getDuracion()
+            );
         }
 
         jLista.setModel(modelo);
@@ -334,6 +413,12 @@ public class AsociarCanciones extends javax.swing.JFrame {
             cav.setId_disco_vinilo(idDisco);
 
             Cancion_viniloDAO cavD = new Cancion_viniloDAO();
+            // Verificar si ya existe
+            if (cavD.existeCancionEnVinilo(idDisco, idCancion)) {
+                JOptionPane.showMessageDialog(this, "Esta canción ya está asociada a este vinilo.");
+                return;
+            }
+
             ok = cavD.agregarCancionAVinilo(cav);
 
             if (ok) {
@@ -350,6 +435,12 @@ public class AsociarCanciones extends javax.swing.JFrame {
             cmp3.setId_disco_mp3(idDisco);
 
             Cancion_disco_mp3DAO cmp3D = new Cancion_disco_mp3DAO();
+            // Verificar si ya existe
+            if (cmp3D.existeCancionEnMp3(idDisco, idCancion)) {
+                JOptionPane.showMessageDialog(this, "Esta canción ya está asociada a este MP3.");
+                return;
+            }
+
             ok = cmp3D.agregarCancionAMp3(cmp3);
 
             if (ok) {
@@ -549,6 +640,54 @@ public class AsociarCanciones extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnBuscarMActionPerformed
 
+    private void btnBorrarCancionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarCancionActionPerformed
+        // 1. Validar selección
+        int index = jLista.getSelectedIndex();
+        if (index == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione una canción de la lista.");
+            return;
+        }
+
+        // 2. Obtener ID real de la canción desde el JList
+        String textoCancion = jLista.getModel().getElementAt(index);
+        int idCancion = Integer.parseInt(textoCancion.split(" - ")[0]); // ID es el primer valor
+
+        // 3. Obtener ID del disco
+        int idDisco = Integer.parseInt(txtId.getText().trim());
+
+        // 4. Saber si es vinilo o mp3
+        String tipo = lbdiscomp3.getText(); // VINILO o MP3
+
+        boolean ok = false;
+
+        // 5. Eliminar según tipo
+        if (tipo.equalsIgnoreCase("VINILO")) {
+
+            Cancion_viniloDAO cvDAO = new Cancion_viniloDAO();
+            ok = cvDAO.eliminarCancionDeVinilo(idDisco, idCancion);
+
+            if (ok) {
+                cargarCancionesDelVinilo(idDisco);
+            }
+
+        } else if (tipo.equalsIgnoreCase("MP3")) {
+
+            Cancion_disco_mp3DAO cmDAO = new Cancion_disco_mp3DAO();
+            ok = cmDAO.eliminarCancionDeMp3(idDisco, idCancion);
+
+            if (ok) {
+                cargarCancionesDelMp3(idDisco);
+            }
+        }
+
+        // 6. Mensaje final
+        if (ok) {
+            JOptionPane.showMessageDialog(this, "Canción eliminada correctamente.");
+        } else {
+            JOptionPane.showMessageDialog(this, "No se pudo eliminar la canción.");
+        }
+    }//GEN-LAST:event_btnBorrarCancionActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -578,6 +717,7 @@ public class AsociarCanciones extends javax.swing.JFrame {
     private javax.swing.JLabel LAutor;
     private javax.swing.JLabel LNom;
     private javax.swing.JButton btnAnadirCancion;
+    private javax.swing.JButton btnBorrarCancion;
     private javax.swing.JButton btnBuscarM;
     private javax.swing.JButton btnBuscarV;
     private javax.swing.JLabel imgDisco;
@@ -595,6 +735,7 @@ public class AsociarCanciones extends javax.swing.JFrame {
     private javax.swing.JLabel lbVendedor;
     private javax.swing.JLabel lbVendedor1;
     private javax.swing.JLabel lbdiscomp3;
+    private javax.swing.JLabel lbtitulo2;
     private javax.swing.JTextField txtId;
     // End of variables declaration//GEN-END:variables
 }
