@@ -55,9 +55,7 @@ public class Login extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Bienvenido comprador: " + c.getNombre());
             
             Sesion.setIdComprador(c.getId_comprador());//Guardar el id del comprador
-            
-            JOptionPane.showMessageDialog(null, "Bienvenido comprador: " + c.getId_comprador());
-
+  
             Comprador comprador = new Comprador();
             comprador.setVisible(true);
             comprador.setLocationRelativeTo(null);
@@ -73,7 +71,7 @@ public class Login extends javax.swing.JFrame {
             // SI ES VENDEDOR
             JOptionPane.showMessageDialog(null, "Bienvenido vendedor: " + v.getNombre());
             
-            Sesion.setIdVendedor(v.getId_vendedor());//Guardar el id del comprador
+            Sesion.setIdVendedor(v.getId_vendedor());//Guardar el id del vendedor
 
             Vendedor vendedor = new Vendedor();
             vendedor.setVisible(true);

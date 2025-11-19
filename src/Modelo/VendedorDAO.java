@@ -6,14 +6,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
-
 public class VendedorDAO {
+
     Connection con;
     PreparedStatement ps;
     ResultSet rs;
     Conexion cn = new Conexion();
-     
-    public boolean CrearVendedor (Vendedor ven){
+
+    public boolean CrearVendedor(Vendedor ven) {
         String sql = "INSERT INTO vendedor(nombre, correo, direccion, password) VALUES (?,?,?,?)";
         try {
             con = cn.getConnection();
@@ -27,18 +27,19 @@ public class VendedorDAO {
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e.toString());
             return false;
-        }finally{
-             try {
+        } finally {
+            try {
                 con.close();
             } catch (SQLException e) {
                 System.out.println(e.toString());
             }
-        }    
+        }
     }
-    public Vendedor logV (String correo, String password ){
+
+    public Vendedor logV(String correo, String password) {
         Vendedor v = new Vendedor();
         String sql = "SELECT * FROM vendedor WHERE correo = ? AND password = ?";
-         
+
         try {
             con = cn.getConnection();
             ps = con.prepareStatement(sql);
@@ -57,4 +58,30 @@ public class VendedorDAO {
         }
         return v;
     }
+
+    public boolean existeCorreo(String correo) {
+        String sql = "SELECT correo FROM vendedor WHERE correo = ?";
+
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, correo);
+            rs = ps.executeQuery();
+
+            // Si existe al menos un registro ->correo ya está ocupado
+            return rs.next();
+
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+            return false;
+
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.toString());
+            }
+        }
+    }
+
 }

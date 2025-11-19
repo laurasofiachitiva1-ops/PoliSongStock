@@ -13,21 +13,21 @@ public class CreateAccount extends javax.swing.JFrame {
     CompradorDAO comD = new CompradorDAO();
     Vendedor ven = new Vendedor();
     VendedorDAO venD = new VendedorDAO();
-    
+
     public CreateAccount() {
         initComponents();
- 
+
         // Cursor tipo mano en el label de salir
         imgSalir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        
+
         // Cursor tipo mano en el boton registrar
         btnRegistrarse.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        
+
         // Agrupar radios
         ButtonGroup grupo = new ButtonGroup();
         grupo.add(rdbComprador);
         grupo.add(rdbVendedor);
-        
+
     }
 
     @SuppressWarnings("unchecked")
@@ -237,7 +237,7 @@ public class CreateAccount extends javax.swing.JFrame {
     }//GEN-LAST:event_imgSalirMouseClicked
 
     private void btnRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarseActionPerformed
-     
+
         String usuario = txtDireccionC.getText().trim();
         String email = txtEmail.getText().trim();
         String contrasena = String.valueOf(txtContrasenaC.getPassword());
@@ -248,34 +248,42 @@ public class CreateAccount extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Por favor, llene todos los campos");
             return;
         }
+
         if (!rdbComprador.isSelected() && !rdbVendedor.isSelected()) {
             JOptionPane.showMessageDialog(null, "Seleccione un tipo de cuenta");
             return;
         }
+
         if (!contrasena.equals(confirmar)) {
             JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden");
             return;
         }
-        // Dependiendo del tipo de cuenta
+
+        // Verificar el correo en AMBAS tablas
+        boolean correoExisteEnComprador = comD.existeCorreo(email);
+        boolean correoExisteEnVendedor = venD.existeCorreo(email);
+
+        if (correoExisteEnComprador || correoExisteEnVendedor) {
+            JOptionPane.showMessageDialog(null, "Ya existe un usuario registrado con este correo.");
+            return;
+        }
+
         boolean registroExitoso = false;
 
         if (rdbComprador.isSelected()) {
-            // Configurar objeto Comprador
             com.setNombre(usuario);
             com.setCorreo(email);
             com.setPassword(contrasena);
             com.setDireccion(direccion);
 
-            // Llamar al DAO de Comprador
             registroExitoso = comD.CrearComprador(com);
 
         } else if (rdbVendedor.isSelected()) {
-            // Configurar objeto Vendedor
             ven.setNombre(usuario);
             ven.setCorreo(email);
             ven.setPassword(contrasena);
             ven.setDireccion(direccion);
-            // Llamar al DAO de Vendedor
+
             registroExitoso = venD.CrearVendedor(ven);
         }
 
@@ -286,7 +294,7 @@ public class CreateAccount extends javax.swing.JFrame {
             dispose();
         } else {
             JOptionPane.showMessageDialog(null, "Error al crear el usuario. Intente nuevamente.");
-        }           
+        }
     }//GEN-LAST:event_btnRegistrarseActionPerformed
 
     private void txtContrasenaCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtContrasenaCActionPerformed

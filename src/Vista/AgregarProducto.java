@@ -165,18 +165,11 @@ public class AgregarProducto extends javax.swing.JFrame {
         lbVendedor10 = new javax.swing.JLabel();
         lbVendedor11 = new javax.swing.JLabel();
         lbVendedor12 = new javax.swing.JLabel();
-        lbVendedor13 = new javax.swing.JLabel();
         lbVendedor14 = new javax.swing.JLabel();
-        lbVendedor15 = new javax.swing.JLabel();
         txtNombreCancion = new javax.swing.JTextField();
         txtGeneroCancion = new javax.swing.JTextField();
-        txtTamanioCan = new javax.swing.JTextField();
-        txtCalidadCan = new javax.swing.JTextField();
-        btnAgregarCancion = new javax.swing.JButton();
         btnAnadirArtista = new javax.swing.JButton();
         lbVendedor16 = new javax.swing.JLabel();
-        lbVendedor17 = new javax.swing.JLabel();
-        txtPrecioCancion = new javax.swing.JTextField();
         cmbArtistaCan = new javax.swing.JComboBox<>();
         btnAnadirArtista1 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -185,6 +178,13 @@ public class AgregarProducto extends javax.swing.JFrame {
         imagenDisco = new javax.swing.JLabel();
         rdbvinilo = new javax.swing.JRadioButton();
         rdbmp3 = new javax.swing.JRadioButton();
+        txtTamanioCan = new javax.swing.JTextField();
+        txtCalidadCan = new javax.swing.JTextField();
+        txtPrecioCancion = new javax.swing.JTextField();
+        btnAgregarCancion = new javax.swing.JButton();
+        lbVendedor17 = new javax.swing.JLabel();
+        lbVendedor13 = new javax.swing.JLabel();
+        lbVendedor15 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -307,40 +307,15 @@ public class AgregarProducto extends javax.swing.JFrame {
         lbVendedor12.setText("Artista");
         getContentPane().add(lbVendedor12, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 420, -1, -1));
 
-        lbVendedor13.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        lbVendedor13.setText("Calidad (Kbps)");
-        getContentPane().add(lbVendedor13, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 548, -1, -1));
-
         lbVendedor14.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lbVendedor14.setText("Duración");
         getContentPane().add(lbVendedor14, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 484, -1, -1));
-
-        lbVendedor15.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        lbVendedor15.setText("Tamaño (MB)");
-        getContentPane().add(lbVendedor15, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 516, -1, -1));
 
         txtNombreCancion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         getContentPane().add(txtNombreCancion, new org.netbeans.lib.awtextra.AbsoluteConstraints(172, 387, 269, -1));
 
         txtGeneroCancion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         getContentPane().add(txtGeneroCancion, new org.netbeans.lib.awtextra.AbsoluteConstraints(172, 451, 269, -1));
-
-        txtTamanioCan.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        getContentPane().add(txtTamanioCan, new org.netbeans.lib.awtextra.AbsoluteConstraints(172, 515, 269, -1));
-
-        txtCalidadCan.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        getContentPane().add(txtCalidadCan, new org.netbeans.lib.awtextra.AbsoluteConstraints(172, 547, 269, -1));
-
-        btnAgregarCancion.setBackground(new java.awt.Color(204, 204, 204));
-        btnAgregarCancion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnAgregarCancion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/mas 15px.png"))); // NOI18N
-        btnAgregarCancion.setText("Agregar canción");
-        btnAgregarCancion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregarCancionActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnAgregarCancion, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 620, 429, -1));
 
         btnAnadirArtista.setBackground(new java.awt.Color(204, 204, 204));
         btnAnadirArtista.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -356,13 +331,6 @@ public class AgregarProducto extends javax.swing.JFrame {
         lbVendedor16.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lbVendedor16.setText("Nombe");
         getContentPane().add(lbVendedor16, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 388, -1, -1));
-
-        lbVendedor17.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        lbVendedor17.setText("Precio");
-        getContentPane().add(lbVendedor17, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 580, -1, -1));
-
-        txtPrecioCancion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        getContentPane().add(txtPrecioCancion, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 580, 269, -1));
 
         cmbArtistaCan.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cmbArtistaCan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -406,6 +374,31 @@ public class AgregarProducto extends javax.swing.JFrame {
 
         rdbmp3.setText("Mp3");
 
+        txtTamanioCan.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        txtCalidadCan.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        txtPrecioCancion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        btnAgregarCancion.setBackground(new java.awt.Color(204, 204, 204));
+        btnAgregarCancion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnAgregarCancion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/mas 15px.png"))); // NOI18N
+        btnAgregarCancion.setText("Agregar canción");
+        btnAgregarCancion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarCancionActionPerformed(evt);
+            }
+        });
+
+        lbVendedor17.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lbVendedor17.setText("Precio");
+
+        lbVendedor13.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lbVendedor13.setText("Calidad (Kbps)");
+
+        lbVendedor15.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lbVendedor15.setText("Tamaño (MB)");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -417,16 +410,29 @@ public class AgregarProducto extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(172, 172, 172)
-                        .addComponent(cmbMin, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cmbSeg, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(262, 262, 262)
                         .addComponent(rdbvinilo)
                         .addGap(48, 48, 48)
-                        .addComponent(rdbmp3)))
-                .addContainerGap(308, Short.MAX_VALUE))
+                        .addComponent(rdbmp3))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(13, 13, 13)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbVendedor15)
+                            .addComponent(lbVendedor17)
+                            .addComponent(lbVendedor13))
+                        .addGap(59, 59, 59)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtTamanioCan, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(cmbMin, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cmbSeg, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtCalidadCan, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtPrecioCancion, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnAgregarCancion, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(309, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -437,14 +443,28 @@ public class AgregarProducto extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(rdbmp3)
                     .addComponent(rdbvinilo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 166, Short.MAX_VALUE)
+                .addGap(170, 170, 170)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmbMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmbSeg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(248, 248, 248))
+                    .addComponent(cmbSeg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtTamanioCan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbVendedor15))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtCalidadCan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbVendedor13))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtPrecioCancion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbVendedor17))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addComponent(btnAgregarCancion)
+                .addGap(23, 23, 23))
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 750, 760));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 750, 690));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -505,6 +525,12 @@ public class AgregarProducto extends javax.swing.JFrame {
         String seg = (String) cmbSeg.getSelectedItem();
         String artista = (String) cmbArtistaCan.getSelectedItem();
 
+        // Validar si NO hay artistas cargados
+        if (cmbArtistaCan.getItemCount() == 0 || artista == null) {
+            JOptionPane.showMessageDialog(null, "Debe crear un artista antes de registrar una canción.");
+            return;
+        }
+
         if (nombre.isEmpty() || genero.isEmpty() || tamano.isEmpty() || calidad.isEmpty() || precio.isEmpty() || artista == null
                 || min.equals("(minutos)") || seg.equals("(segundos)")) {
 
@@ -564,6 +590,12 @@ public class AgregarProducto extends javax.swing.JFrame {
         String artista = (String) cmbArtistaVinl.getSelectedItem();
 
         if (rdbvinilo.isSelected()) {
+
+            // Validar si NO hay artistas cargados
+            if (cmbArtistaCan.getItemCount() == 0 || artista == null) {
+                JOptionPane.showMessageDialog(null, "Debe crear un artista antes de registrar una disco.");
+                return;
+            }
 
             if (id.isEmpty() || nombre.isEmpty() || genero.isEmpty() || anio.isEmpty() || precio.isEmpty() || inventario.isEmpty()) {
 
@@ -636,6 +668,11 @@ public class AgregarProducto extends javax.swing.JFrame {
             }
 
         } else if (rdbmp3.isSelected()) {
+            // Validar si NO hay artistas cargados
+            if (cmbArtistaCan.getItemCount() == 0 || artista == null) {
+                JOptionPane.showMessageDialog(null, "Debe crear un artista antes de registrar un disco.");
+                return;
+            }
 
             if (id.isEmpty() || nombre.isEmpty() || genero.isEmpty() || anio.isEmpty() || precio.isEmpty()) {
 

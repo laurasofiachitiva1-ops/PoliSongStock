@@ -25,6 +25,8 @@ public class AsociarCanciones extends javax.swing.JFrame {
         ocultarComponentes();
         // Dejar el JList vacío
         jLista.setModel(new javax.swing.DefaultListModel<>());
+        // Cursor tipo mano en el label de salir
+        imgSalir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
     }
 
     /**
@@ -58,7 +60,7 @@ public class AsociarCanciones extends javax.swing.JFrame {
         jlcan = new javax.swing.JLabel();
         btnBuscarM = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(89, 89, 89));
