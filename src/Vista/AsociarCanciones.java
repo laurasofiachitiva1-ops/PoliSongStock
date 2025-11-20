@@ -61,7 +61,6 @@ public class AsociarCanciones extends javax.swing.JFrame {
                 return c;
             }
         });
-        
 
         // MOSTRAR EL BOTON PARA BORRAR LA CANCION DE LA LISTA
         jLista.addListSelectionListener(e -> {
@@ -461,10 +460,12 @@ public class AsociarCanciones extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAnadirCancionActionPerformed
 
     private void imgSalirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgSalirMouseClicked
-        AgregarProducto prod = new AgregarProducto();
-        prod.setVisible(true);
-        prod.setLocationRelativeTo(null);
-        prod.setResizable(false);
+
+        AgregarProducto ap = new AgregarProducto();
+        ap.setVisible(true);
+        ap.setVisible(true);
+        ap.setLocationRelativeTo(null);
+        ap.setResizable(false);
         dispose();
     }//GEN-LAST:event_imgSalirMouseClicked
 

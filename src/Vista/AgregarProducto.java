@@ -33,10 +33,14 @@ public class AgregarProducto extends javax.swing.JFrame {
 
     String Ruta = "";
 
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AgregarProducto.class.getName());
 
     public AgregarProducto() {
         initComponents();
+        
+        // Cursor tipo mano en el label de salir
+        imgSalir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         // Cursor tipo mano en los botones añadir artista
         btnAnadirArtista.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -185,6 +189,7 @@ public class AgregarProducto extends javax.swing.JFrame {
         lbVendedor17 = new javax.swing.JLabel();
         lbVendedor13 = new javax.swing.JLabel();
         lbVendedor15 = new javax.swing.JLabel();
+        imgSalir = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -399,14 +404,17 @@ public class AgregarProducto extends javax.swing.JFrame {
         lbVendedor15.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lbVendedor15.setText("Tamaño (MB)");
 
+        imgSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/logo salir.png"))); // NOI18N
+        imgSalir.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imgSalirMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(imagenDisco, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(77, 77, 77))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -433,11 +441,22 @@ public class AgregarProducto extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(btnAgregarCancion, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(309, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(imagenDisco, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(77, 77, 77))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(imgSalir)
+                        .addGap(30, 30, 30))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(89, 89, 89)
+                .addContainerGap()
+                .addComponent(imgSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(47, 47, 47)
                 .addComponent(imagenDisco, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(44, 44, 44)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -754,6 +773,16 @@ public class AgregarProducto extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_btnAsociarCanActionPerformed
 
+    private void imgSalirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgSalirMouseClicked
+
+        Vendedor v = new Vendedor();
+        v.setVisible(true);
+        v.setVisible(true);
+        v.setLocationRelativeTo(null);
+        v.setResizable(false);
+        dispose();
+    }//GEN-LAST:event_imgSalirMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -791,6 +820,7 @@ public class AgregarProducto extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cmbMin;
     private javax.swing.JComboBox<String> cmbSeg;
     private javax.swing.JLabel imagenDisco;
+    private javax.swing.JLabel imgSalir;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;

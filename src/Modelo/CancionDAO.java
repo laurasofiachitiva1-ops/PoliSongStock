@@ -71,4 +71,20 @@ public class CancionDAO {
         return lista;
     }
 
+    public boolean eliminarCancion(int idCancion) {
+        String sql = "DELETE FROM cancion WHERE id_cancion = ?";
+
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, idCancion);
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al eliminar canción: " + e.getMessage());
+            return false;
+        }
+    }
+
 }

@@ -99,4 +99,35 @@ public class Cancion_viniloDAO {
         return false;
     }
 
+    public boolean eliminarPorVinilo(int idVinilo) {
+        String sql = "DELETE FROM cancion_vinilo WHERE id_disco_vinilo = ?";
+
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, idVinilo);
+
+            ps.executeUpdate();
+            return true;
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al eliminar canciones del vinilo: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean eliminarPorCancion(int idCancion) {
+        String sql = "DELETE FROM cancion_vinilo WHERE id_cancion = ?";
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, idCancion);
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.toString());
+            return false;
+        }
+    }
+
 }

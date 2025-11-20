@@ -132,4 +132,21 @@ public class Disco_viniloDAO {
         return lista;
     }
 
+    public boolean eliminarVinilo(int idVinilo) {
+        String sql = "DELETE FROM disco_vinilo WHERE id_disco_vinilo = ?";
+
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, idVinilo);
+
+            int rows = ps.executeUpdate();
+            return rows > 0;
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al eliminar vinilo: " + e.getMessage());
+            return false;
+        }
+    }
+
 }

@@ -2,10 +2,10 @@ package Vista;
 
 import Modelo.Cancion;
 import Modelo.CancionDAO;
+import Modelo.Cancion_disco_mp3DAO;
+import Modelo.Cancion_viniloDAO;
 import Modelo.CatalogoDAO;
-import Modelo.Disco_mp3;
 import Modelo.Disco_mp3DAO;
-import Modelo.Disco_vinilo;
 import Modelo.Disco_viniloDAO;
 import Modelo.ProductoCatalogo;
 import Modelo.RenderImagen;
@@ -15,6 +15,7 @@ import java.awt.Image;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import static javax.swing.SwingConstants.CENTER;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -66,8 +67,8 @@ public class Vendedor extends javax.swing.JFrame {
 
         // Ajuste de texto para botones del catálogo
         btnProducto.setText("<html><center>Agregar nuevo<br>producto/artista</center></html>");
-        ajustarTextoBoton(btnProducto1, 50);
-        ajustarTextoBoton(btnProducto2, 50);
+        ajustarTextoBoton(btnModificar, 50);
+        ajustarTextoBoton(btnEliminar, 50);
 
         // COLOR DE FONDO PARA EL HEADER
         javax.swing.table.JTableHeader header = jTable.getTableHeader();
@@ -118,8 +119,8 @@ public class Vendedor extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jlCrearCuenta1 = new javax.swing.JLabel();
         btnProducto = new javax.swing.JButton();
-        btnProducto1 = new javax.swing.JButton();
-        btnProducto2 = new javax.swing.JButton();
+        btnModificar = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
@@ -238,23 +239,23 @@ public class Vendedor extends javax.swing.JFrame {
             }
         });
 
-        btnProducto1.setBackground(new java.awt.Color(204, 204, 204));
-        btnProducto1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnProducto1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/logo mas.png"))); // NOI18N
-        btnProducto1.setText("Editar producto/artista");
-        btnProducto1.addActionListener(new java.awt.event.ActionListener() {
+        btnModificar.setBackground(new java.awt.Color(204, 204, 204));
+        btnModificar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/logo mas.png"))); // NOI18N
+        btnModificar.setText("Editar producto");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnProducto1ActionPerformed(evt);
+                btnModificarActionPerformed(evt);
             }
         });
 
-        btnProducto2.setBackground(new java.awt.Color(204, 204, 204));
-        btnProducto2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnProducto2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/logo mas.png"))); // NOI18N
-        btnProducto2.setText("Eliminar producto/artista");
-        btnProducto2.addActionListener(new java.awt.event.ActionListener() {
+        btnEliminar.setBackground(new java.awt.Color(204, 204, 204));
+        btnEliminar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/logo mas.png"))); // NOI18N
+        btnEliminar.setText("Eliminar producto");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnProducto2ActionPerformed(evt);
+                btnEliminarActionPerformed(evt);
             }
         });
 
@@ -289,9 +290,9 @@ public class Vendedor extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(btnProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(36, 36, 36)
-                        .addComponent(btnProducto1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
-                        .addComponent(btnProducto2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -301,8 +302,8 @@ public class Vendedor extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnProducto)
-                    .addComponent(btnProducto2)
-                    .addComponent(btnProducto1))
+                    .addComponent(btnEliminar)
+                    .addComponent(btnModificar))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
                 .addContainerGap())
@@ -429,112 +430,173 @@ public class Vendedor extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCerrarSesionVActionPerformed
 
     private void cargarCatalogo() {
-    int idVen = Sesion.getIdVendedor();
 
-    CatalogoDAO dao = new CatalogoDAO();
-    List<ProductoCatalogo> lista = dao.listarTodoPorVendedor(idVen);
+        int idVen = Sesion.getIdVendedor();
 
-    javax.swing.table.DefaultTableModel modelo
-            = (javax.swing.table.DefaultTableModel) jTable.getModel();
-    modelo.setRowCount(0);
+        CatalogoDAO dao = new CatalogoDAO();
+        List<ProductoCatalogo> lista = dao.listarTodoPorVendedor(idVen);
 
-    for (ProductoCatalogo p : lista) {
+        javax.swing.table.DefaultTableModel modelo
+                = (javax.swing.table.DefaultTableModel) jTable.getModel();
+        modelo.setRowCount(0);
 
-        ImageIcon icono = null;
+        for (ProductoCatalogo p : lista) {
 
-        // ======================
-        // 1. Imagen desde BD
-        // ======================
-        if (p.getImagen() != null) {
-            Image img = new ImageIcon(p.getImagen())
-                    .getImage()
-                    .getScaledInstance(60, 60, Image.SCALE_SMOOTH);
-            icono = new ImageIcon(img);
-        }
-
-        JLabel lblImg;
-
-        // ======================
-        // 2. Si tiene imagen BD → usarla
-        // ======================
-        if (icono != null) {
-            lblImg = new JLabel(icono);
-
-        } else {
-            // ======================
-            // 3. Evitar NULL en el tipo
-            // ======================
-            String tipo = (p.getTipo() == null) ? "" : p.getTipo().toLowerCase();
+            ImageIcon icono = null;
 
             // ======================
-            // 4. Seleccionar ruta por tipo
+            // 1. Imagen desde BD
             // ======================
-            String ruta;
-
-            switch (tipo) {
-                case "mp3":
-                case "cancion":
-                case "canción":   // con tilde
-                    ruta = "/Img/mp3.png";
-                    break;
-
-                case "vinilo":
-                case "disco":
-                case "vinilo mp3":
-                case "disco mp3":
-                    ruta = "/Img/disco.png";
-                    break;
-
-                default:
-                    ruta = "/Img/mp3.png"; // fallback seguro
-                    break;
-            }
-
-            // ======================
-            // 5. Cargar imagen (segura)
-            // ======================
-            java.net.URL url = getClass().getResource(ruta);
-
-            if (url == null) {
-                System.out.println("⚠ No se encontró la imagen: " + ruta);
-                lblImg = new JLabel("No img");
-            } else {
-                ImageIcon defaultIcon = new ImageIcon(url);
-                Image imgDef = defaultIcon.getImage()
+            if (p.getImagen() != null) {
+                Image img = new ImageIcon(p.getImagen())
+                        .getImage()
                         .getScaledInstance(60, 60, Image.SCALE_SMOOTH);
-                lblImg = new JLabel(new ImageIcon(imgDef));
+                icono = new ImageIcon(img);
             }
+
+            JLabel lblImg;
+
+            // ======================
+            // 2. Si tiene imagen BD 
+            // ======================
+            if (icono != null) {
+                lblImg = new JLabel(icono);
+
+            } else {
+                // ======================
+                // 3. Evitar NULL en el tipo
+                // ======================
+                String tipo = (p.getTipo() == null) ? "" : p.getTipo().toLowerCase();
+
+                // ======================
+                // 4. Seleccionar ruta por tipo
+                // ======================
+                String ruta;
+
+                switch (tipo) {
+                    case "mp3":
+                    case "cancion":
+                    case "canción":   // con tilde
+                        ruta = "/Img/mp3.png";
+                        break;
+
+                    case "vinilo":
+                    case "disco":
+                    case "vinilo mp3":
+                    case "disco mp3":
+                        ruta = "/Img/disco.png";
+                        break;
+
+                    default:
+                        ruta = "/Img/mp3.png"; // fallback seguro
+                        break;
+                }
+
+                // ======================
+                // 5. Cargar imagen (segura)
+                // ======================
+                java.net.URL url = getClass().getResource(ruta);
+
+                if (url == null) {
+                    System.out.println("⚠ No se encontró la imagen: " + ruta);
+                    lblImg = new JLabel("No img");
+                } else {
+                    ImageIcon defaultIcon = new ImageIcon(url);
+                    Image imgDef = defaultIcon.getImage()
+                            .getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+                    lblImg = new JLabel(new ImageIcon(imgDef));
+                }
+            }
+
+            modelo.addRow(new Object[]{
+                p.getId(),
+                p.getTipo(),
+                p.getNombre(),
+                p.getArtista(),
+                p.getGenero(),
+                p.getPrecio(),
+                lblImg
+            });
         }
-
-        modelo.addRow(new Object[]{
-            p.getId(),
-            p.getTipo(),
-            p.getNombre(),
-            p.getArtista(),
-            p.getGenero(),
-            p.getPrecio(),
-            lblImg
-        });
     }
-}
-
 
 
     private void btnProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductoActionPerformed
-        AgregarProducto prod = new AgregarProducto();
-        prod.setVisible(true);
-        prod.setLocationRelativeTo(null);
-        prod.setResizable(false);
-
+        AgregarProducto ap = new AgregarProducto();
+        ap.setLocationRelativeTo(null);
+        ap.setResizable(false);
+        ap.setVisible(true);
+        dispose();
     }//GEN-LAST:event_btnProductoActionPerformed
 
-    private void btnProducto1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProducto1ActionPerformed
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnProducto1ActionPerformed
+    }//GEN-LAST:event_btnModificarActionPerformed
 
-    private void btnProducto2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProducto2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnProducto2ActionPerformed
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        int fila = jTable.getSelectedRow();
+
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un producto primero.");
+            return;
+        }
+
+        int id = Integer.parseInt(jTable.getValueAt(fila, 0).toString());
+        String tipo = jTable.getValueAt(fila, 1).toString().toLowerCase();
+
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "¿Eliminar el producto seleccionado?",
+                "Confirmar eliminación",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        boolean ok = false;
+
+        CancionDAO cancionDAO = new CancionDAO();
+        Cancion_viniloDAO cvDAO = new Cancion_viniloDAO();
+        Cancion_disco_mp3DAO cmDAO = new Cancion_disco_mp3DAO();
+
+        // ===============================================
+        //         ELIMINAR VINILO
+        // ===============================================
+        if (tipo.contains("vinilo")) {
+            cvDAO.eliminarPorVinilo(id);    // eliminar relaciones
+            Disco_viniloDAO dvDAO = new Disco_viniloDAO();
+            ok = dvDAO.eliminarVinilo(id);  // eliminar disco
+        } // ===============================================
+        //         ELIMINAR MP3
+        // ===============================================
+        else if (tipo.contains("mp3")) {
+            cmDAO.eliminarPorMp3(id);      // eliminar relaciones
+            Disco_mp3DAO mpDAO = new Disco_mp3DAO();
+            ok = mpDAO.eliminarMp3(id);    // eliminar disco
+        } // ===============================================
+        //         ELIMINAR CANCION
+        // ===============================================
+        else if (tipo.contains("canción")) {
+
+            // 1. eliminar relaciones vinilo
+            cvDAO.eliminarPorCancion(id);
+
+            // 2. eliminar relaciones mp3
+            cmDAO.eliminarPorCancion(id);
+
+            // 3. finalmente eliminar canción
+            ok = cancionDAO.eliminarCancion(id);
+        }
+
+        if (ok) {
+            JOptionPane.showMessageDialog(this, "Producto eliminado correctamente.");
+            cargarCatalogo();
+        } else {
+            JOptionPane.showMessageDialog(this, "No se pudo eliminar.");
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -564,10 +626,10 @@ public class Vendedor extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCatalogoV;
     private javax.swing.JButton btnCerrarSesionV;
+    private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnOrdenes;
     private javax.swing.JButton btnProducto;
-    private javax.swing.JButton btnProducto1;
-    private javax.swing.JButton btnProducto2;
     private javax.swing.JButton btnRepDeCompras;
     private javax.swing.JLabel imgNotificacionV;
     private javax.swing.JLabel imglogoV;

@@ -98,4 +98,34 @@ public class Cancion_disco_mp3DAO {
         return false;
     }
 
+    public boolean eliminarPorMp3(int idMp3) {
+        String sql = "DELETE FROM cancion_disco_mp3 WHERE id_disco_mp3 = ?";
+
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, idMp3);
+            ps.executeUpdate();
+            return true;
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al eliminar canciones del MP3: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean eliminarPorCancion(int idCancion) {
+        String sql = "DELETE FROM cancion_disco_mp3 WHERE id_cancion = ?";
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, idCancion);
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.toString());
+            return false;
+        }
+    }
+
 }
