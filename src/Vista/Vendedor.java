@@ -1,16 +1,45 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package Vista;
 
+import Modelo.Cancion;
+import Modelo.CancionDAO;
+import Modelo.CatalogoDAO;
+import Modelo.Disco_mp3;
+import Modelo.Disco_mp3DAO;
+import Modelo.Disco_vinilo;
+import Modelo.Disco_viniloDAO;
+import Modelo.ProductoCatalogo;
+import Modelo.RenderImagen;
+import Modelo.Sesion;
+import java.awt.Color;
+import java.awt.Image;
+import java.util.List;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import static javax.swing.SwingConstants.CENTER;
+import javax.swing.table.DefaultTableCellRenderer;
+
 public class Vendedor extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Vendedor.class.getName());
 
     public Vendedor() {
         initComponents();
-        
+
+        jTable.setRowHeight(60);
+        jTable.getColumnModel().getColumn(6).setCellRenderer(new RenderImagen());
+
+        // --- CENTRAR DATOS DEL RESTO DE COLUMNAS ---
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+        for (int i = 0; i < jTable.getColumnCount(); i++) {
+            if (i != 6) {  // evitar columna de imagen
+                jTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+            }
+        }
+
+        cargarCatalogo();
+
         // Cursor tipo mano en el boton catalogo
         btnCatalogoV.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         // Cursor tipo mano en el boton ordenes
@@ -21,12 +50,12 @@ public class Vendedor extends javax.swing.JFrame {
         btnCerrarSesionV.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         // Cursor tipo mano en el boton producto
         btnProducto.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        
+
         // Ocultar las pestañas (tabs)
         jTabbedPane1.setUI(new javax.swing.plaf.basic.BasicTabbedPaneUI() {
             @Override
             protected int calculateTabAreaHeight(int tabPlacement, int runCount, int maxTabHeight) {
-            return 0;
+                return 0;
             }
         });
 
@@ -34,18 +63,38 @@ public class Vendedor extends javax.swing.JFrame {
         btnCatalogoV.addActionListener(e -> jTabbedPane1.setSelectedIndex(0));
         btnOrdenes.addActionListener(e -> jTabbedPane1.setSelectedIndex(1));
         btnRepDeCompras.addActionListener(e -> jTabbedPane1.setSelectedIndex(2));
-        
+
         // Ajuste de texto para botones del catálogo
         btnProducto.setText("<html><center>Agregar nuevo<br>producto/artista</center></html>");
         ajustarTextoBoton(btnProducto1, 50);
         ajustarTextoBoton(btnProducto2, 50);
 
-    }
-    private void ajustarTextoBoton(javax.swing.JButton boton, int ancho) {
-    String texto = boton.getText();
-    boton.setText("<html><div style='width:" + ancho + "px; text-align:center;'>" + texto + "</div></html>");
-}
+        // COLOR DE FONDO PARA EL HEADER
+        javax.swing.table.JTableHeader header = jTable.getTableHeader();
+        header.setDefaultRenderer(new javax.swing.table.DefaultTableCellRenderer() {
+            @Override
+            public java.awt.Component getTableCellRendererComponent(
+                    javax.swing.JTable table, Object value, boolean isSelected,
+                    boolean hasFocus, int row, int column) {
 
+                java.awt.Component c = super.getTableCellRendererComponent(
+                        table, value, isSelected, hasFocus, row, column);
+                jTable.getTableHeader().setBackground(new java.awt.Color(89, 89, 89));
+
+                jScrollPane2.getViewport().setBackground(new java.awt.Color(89, 89, 89));
+                c.setBackground(new java.awt.Color(89, 89, 89));
+                c.setForeground(Color.WHITE);
+                setHorizontalAlignment(CENTER);
+                return c;
+            }
+        });
+
+    }
+
+    private void ajustarTextoBoton(javax.swing.JButton boton, int ancho) {
+        String texto = boton.getText();
+        boton.setText("<html><div style='width:" + ancho + "px; text-align:center;'>" + texto + "</div></html>");
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -71,6 +120,8 @@ public class Vendedor extends javax.swing.JFrame {
         btnProducto = new javax.swing.JButton();
         btnProducto1 = new javax.swing.JButton();
         btnProducto2 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         jlCrearCuenta3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -207,6 +258,23 @@ public class Vendedor extends javax.swing.JFrame {
             }
         });
 
+        jTable.setBackground(new java.awt.Color(89, 89, 89));
+        jTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "ID", "Producto", "Nombre", "Artista", "Género", "Precio", "Imagen"
+            }
+        ));
+        jTable.setGridColor(new java.awt.Color(89, 89, 89));
+        jTable.setSelectionBackground(new java.awt.Color(51, 51, 51));
+        jScrollPane2.setViewportView(jTable);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -216,11 +284,14 @@ public class Vendedor extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36)
-                .addComponent(btnProducto1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
-                .addComponent(btnProducto2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(36, 36, 36)
+                        .addComponent(btnProducto1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                        .addComponent(btnProducto2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -232,7 +303,9 @@ public class Vendedor extends javax.swing.JFrame {
                     .addComponent(btnProducto)
                     .addComponent(btnProducto2)
                     .addComponent(btnProducto1))
-                .addContainerGap(252, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jTabbedPane1.addTab("tab1", jPanel1);
@@ -355,12 +428,104 @@ public class Vendedor extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_btnCerrarSesionVActionPerformed
 
+    private void cargarCatalogo() {
+    int idVen = Sesion.getIdVendedor();
+
+    CatalogoDAO dao = new CatalogoDAO();
+    List<ProductoCatalogo> lista = dao.listarTodoPorVendedor(idVen);
+
+    javax.swing.table.DefaultTableModel modelo
+            = (javax.swing.table.DefaultTableModel) jTable.getModel();
+    modelo.setRowCount(0);
+
+    for (ProductoCatalogo p : lista) {
+
+        ImageIcon icono = null;
+
+        // ======================
+        // 1. Imagen desde BD
+        // ======================
+        if (p.getImagen() != null) {
+            Image img = new ImageIcon(p.getImagen())
+                    .getImage()
+                    .getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+            icono = new ImageIcon(img);
+        }
+
+        JLabel lblImg;
+
+        // ======================
+        // 2. Si tiene imagen BD → usarla
+        // ======================
+        if (icono != null) {
+            lblImg = new JLabel(icono);
+
+        } else {
+            // ======================
+            // 3. Evitar NULL en el tipo
+            // ======================
+            String tipo = (p.getTipo() == null) ? "" : p.getTipo().toLowerCase();
+
+            // ======================
+            // 4. Seleccionar ruta por tipo
+            // ======================
+            String ruta;
+
+            switch (tipo) {
+                case "mp3":
+                case "cancion":
+                case "canción":   // con tilde
+                    ruta = "/Img/mp3.png";
+                    break;
+
+                case "vinilo":
+                case "disco":
+                case "vinilo mp3":
+                case "disco mp3":
+                    ruta = "/Img/disco.png";
+                    break;
+
+                default:
+                    ruta = "/Img/mp3.png"; // fallback seguro
+                    break;
+            }
+
+            // ======================
+            // 5. Cargar imagen (segura)
+            // ======================
+            java.net.URL url = getClass().getResource(ruta);
+
+            if (url == null) {
+                System.out.println("⚠ No se encontró la imagen: " + ruta);
+                lblImg = new JLabel("No img");
+            } else {
+                ImageIcon defaultIcon = new ImageIcon(url);
+                Image imgDef = defaultIcon.getImage()
+                        .getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+                lblImg = new JLabel(new ImageIcon(imgDef));
+            }
+        }
+
+        modelo.addRow(new Object[]{
+            p.getId(),
+            p.getTipo(),
+            p.getNombre(),
+            p.getArtista(),
+            p.getGenero(),
+            p.getPrecio(),
+            lblImg
+        });
+    }
+}
+
+
+
     private void btnProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductoActionPerformed
         AgregarProducto prod = new AgregarProducto();
         prod.setVisible(true);
         prod.setLocationRelativeTo(null);
-        prod.setResizable(false); 
-        
+        prod.setResizable(false);
+
     }//GEN-LAST:event_btnProductoActionPerformed
 
     private void btnProducto1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProducto1ActionPerformed
@@ -411,10 +576,12 @@ public class Vendedor extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTable jTable;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel jlCrearCuenta1;
     private javax.swing.JLabel jlCrearCuenta3;

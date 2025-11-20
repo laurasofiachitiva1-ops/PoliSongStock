@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 public class Disco_viniloDAO {
@@ -93,6 +95,41 @@ public class Disco_viniloDAO {
             JOptionPane.showMessageDialog(null, "Error al buscar vinilo: " + e.getMessage());
         }
         return dv;
+    }
+
+    public List<Disco_vinilo> listarDiscosPorVendedor(int idVendedor) {
+        List<Disco_vinilo> lista = new ArrayList<>();
+        String sql = "SELECT dv.*, a.nombre AS autorNombre "
+                + "FROM disco_vinilo dv "
+                + "JOIN autor a ON dv.id_autor = a.id_autor "
+                + "WHERE dv.id_vendedor = ?";
+
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, idVendedor);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Disco_vinilo dv = new Disco_vinilo();
+                dv.setId_disco_vinilo(rs.getInt("id_disco_vinilo"));
+                dv.setId_autor(rs.getInt("id_autor"));
+                dv.setAutorNombre(rs.getString("autorNombre"));
+                dv.setId_vendedor(rs.getInt("id_vendedor"));
+                dv.setNombre(rs.getString("nombre"));
+                dv.setGenero(rs.getString("genero"));
+                dv.setAnio_salida(rs.getInt("anio_salida"));
+                dv.setPrecio(rs.getDouble("precio"));
+                dv.setCantidad(rs.getInt("cantidad"));
+                dv.setImagen(rs.getBytes("imagen")); // importante
+                lista.add(dv);
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al listar vinilos: " + e.getMessage());
+        }
+
+        return lista;
     }
 
 }

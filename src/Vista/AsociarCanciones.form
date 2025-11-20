@@ -117,10 +117,8 @@
                   <Component id="jSeparator1" min="-2" pref="10" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="btnBuscarM" alignment="3" min="-2" pref="48" max="-2" attributes="0"/>
-                          <Component id="btnBuscarV" alignment="0" min="-2" pref="48" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="btnBuscarV" alignment="0" min="-2" pref="48" max="-2" attributes="0"/>
+                      <Component id="btnBuscarM" min="-2" pref="48" max="-2" attributes="0"/>
                       <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                           <Component id="txtId" alignment="3" min="-2" pref="48" max="-2" attributes="0"/>
                           <Component id="lbVendedor1" alignment="3" min="-2" max="-2" attributes="0"/>
