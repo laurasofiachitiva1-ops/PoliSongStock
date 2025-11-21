@@ -149,4 +149,41 @@ public class Disco_viniloDAO {
         }
     }
 
+    public boolean modificarVinilo(Disco_vinilo dv) {
+        String sql = "UPDATE disco_vinilo SET id_autor = ?, nombre = ?, genero = ?, anio_salida = ?, "
+                + "precio = ?, cantidad = ?, imagen = ? WHERE id_disco_vinilo = ?";
+
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+
+            ps.setInt(1, dv.getId_autor());
+            ps.setString(2, dv.getNombre());
+            ps.setString(3, dv.getGenero());
+            ps.setInt(4, dv.getAnio_salida());
+            ps.setDouble(5, dv.getPrecio());
+            ps.setInt(6, dv.getCantidad());
+
+            if (dv.getImagen() != null) {
+                ps.setBytes(7, dv.getImagen());
+            } else {
+                ps.setBytes(7, null); 
+            }
+
+            ps.setInt(8, dv.getId_disco_vinilo());
+
+            int rows = ps.executeUpdate();
+            return rows > 0;
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al modificar vinilo: " + e.getMessage());
+            return false;
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+            }
+        }
+    }
+
 }

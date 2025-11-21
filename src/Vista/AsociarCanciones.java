@@ -195,7 +195,7 @@ public class AsociarCanciones extends javax.swing.JFrame {
 
         btnBorrarCancion.setBackground(new java.awt.Color(204, 204, 204));
         btnBorrarCancion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnBorrarCancion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/borrar.png"))); // NOI18N
+        btnBorrarCancion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/eliminar15px.png"))); // NOI18N
         btnBorrarCancion.setText("Borrar Canción");
         btnBorrarCancion.addActionListener(this::btnBorrarCancionActionPerformed);
 

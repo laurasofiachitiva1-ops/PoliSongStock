@@ -51,6 +51,10 @@ public class Vendedor extends javax.swing.JFrame {
         btnCerrarSesionV.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         // Cursor tipo mano en el boton producto
         btnProducto.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        // Cursor tipo mano en el boton modificar
+        btnModificar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        // Cursor tipo mano en el boton eliminar
+        btnEliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         // Ocultar las pestañas (tabs)
         jTabbedPane1.setUI(new javax.swing.plaf.basic.BasicTabbedPaneUI() {
@@ -207,10 +211,10 @@ public class Vendedor extends javax.swing.JFrame {
                 .addComponent(btnRepDeCompras, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(46, 46, 46)
                 .addComponent(btnCerrarSesionV, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(65, Short.MAX_VALUE))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jpVendedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        getContentPane().add(jpVendedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 500));
 
         jpFondoVen.setBackground(new java.awt.Color(51, 51, 51));
 
@@ -241,7 +245,7 @@ public class Vendedor extends javax.swing.JFrame {
 
         btnModificar.setBackground(new java.awt.Color(204, 204, 204));
         btnModificar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/logo mas.png"))); // NOI18N
+        btnModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/editar.png"))); // NOI18N
         btnModificar.setText("Editar producto");
         btnModificar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -251,7 +255,7 @@ public class Vendedor extends javax.swing.JFrame {
 
         btnEliminar.setBackground(new java.awt.Color(204, 204, 204));
         btnEliminar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/logo mas.png"))); // NOI18N
+        btnEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/eliminar.png"))); // NOI18N
         btnEliminar.setText("Eliminar producto");
         btnEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -283,17 +287,15 @@ public class Vendedor extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jlCrearCuenta1, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(36, 36, 36)
-                        .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
-                        .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(btnProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36)
+                .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
+            .addComponent(jScrollPane2)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -305,8 +307,7 @@ public class Vendedor extends javax.swing.JFrame {
                     .addComponent(btnEliminar)
                     .addComponent(btnModificar))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("tab1", jPanel1);
@@ -413,12 +414,12 @@ public class Vendedor extends javax.swing.JFrame {
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(85, 85, 85)
+                .addGap(64, 64, 64)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jpFondoVen, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 960, 530));
+        getContentPane().add(jpFondoVen, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 960, 500));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -530,7 +531,45 @@ public class Vendedor extends javax.swing.JFrame {
     }//GEN-LAST:event_btnProductoActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        // TODO add your handling code here:
+        int fila = jTable.getSelectedRow();
+
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un producto primero.");
+            return;
+        }
+
+        // Tomar datos de la tabla
+        int id = Integer.parseInt(jTable.getValueAt(fila, 0).toString());
+        String tipo = jTable.getValueAt(fila, 1).toString().toLowerCase();
+
+        //    ABRIR SEGÚN TIPO
+        if (tipo.contains("cancion") || tipo.contains("canción")) {
+
+            //ABRIR VENTANA PARA EDITAR CANCIÓN
+            EditarCancion ec = new EditarCancion(id);
+            ec.setLocationRelativeTo(null);
+            ec.setResizable(false);
+            ec.setVisible(true);
+            dispose();
+        } else if (tipo.contains("vinilo")) {
+
+            //ABRIR VENTANA PARA EDITAR DISCO
+            EditarVinilo ed = new EditarVinilo(id);
+            ed.setLocationRelativeTo(null);
+            ed.setResizable(false);
+            ed.setVisible(true);
+            dispose();
+        } else if (tipo.contains("mp3")) {
+
+            //ABRIR VENTANA PARA EDITAR MP3
+            EditarMp3 mp = new EditarMp3(id);
+            mp.setLocationRelativeTo(null);
+            mp.setResizable(false);
+            mp.setVisible(true);
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Tipo de producto desconocido.");
+        }
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed

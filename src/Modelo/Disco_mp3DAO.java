@@ -145,5 +145,41 @@ public class Disco_mp3DAO {
             return false;
         }
     }
+    
+    public boolean modificarMp3(Disco_mp3 dm) {
+        String sql = "UPDATE disco_mp3 SET id_autor = ?, nombre = ?, genero = ?, anio_salida = ?, "
+                + "precio = ?, imagen = ? WHERE id_disco_mp3 = ?";
+
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+
+            ps.setInt(1, dm.getId_autor());
+            ps.setString(2, dm.getNombre());
+            ps.setString(3, dm.getGenero());
+            ps.setInt(4, dm.getAnio_salida());
+            ps.setDouble(5, dm.getPrecio());
+
+            if (dm.getImagen() != null) {
+                ps.setBytes(6, dm.getImagen());
+            } else {
+                ps.setBytes(6, null); 
+            }
+
+            ps.setInt(7, dm.getId_disco_mp3());
+
+            int rows = ps.executeUpdate();
+            return rows > 0;
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al modificar mp3: " + e.getMessage());
+            return false;
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+            }
+        }
+    }
 
 }
