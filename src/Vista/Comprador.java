@@ -1,14 +1,30 @@
 package Vista;
 
+import Modelo.CatalogoDAO;
+import Modelo.ProductoCatalogo;
+import Modelo.RenderImagen;
+import java.awt.Color;
+import java.awt.Image;
+import java.util.List;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import static javax.swing.SwingConstants.CENTER;
+import javax.swing.table.DefaultTableCellRenderer;
+import Vista.InfoVinilo;  
+import Vista.InfoMp3;     
+import Vista.InfoCancion; 
 
 public class Comprador extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Comprador.class.getName());
 
     public Comprador() {
         initComponents();
+        cargarCatalogo("");
+
         this.setSize(960, 525);
-        
+
         // Cursor tipo mano en el boton catalogo
         btnCatalogo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         // Cursor tipo mano en el boton recopilaciones
@@ -19,12 +35,14 @@ public class Comprador extends javax.swing.JFrame {
         btnCerrarSesion.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         // Cursor tipo mano en el boton historialcompras
         btnHistorialDeCompras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        
+        // Cursor tipo mano en el boton buscar
+        btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
         // Ocultar las pestañas (tabs)
         jTabbedPane1.setUI(new javax.swing.plaf.basic.BasicTabbedPaneUI() {
             @Override
             protected int calculateTabAreaHeight(int tabPlacement, int runCount, int maxTabHeight) {
-            return 0;
+                return 0;
             }
         });
 
@@ -33,7 +51,90 @@ public class Comprador extends javax.swing.JFrame {
         btnMisRecopilaciones.addActionListener(e -> jTabbedPane1.setSelectedIndex(3));
         btnCarritoDeCompras.addActionListener(e -> jTabbedPane1.setSelectedIndex(2));
         btnHistorialDeCompras.addActionListener(e -> jTabbedPane1.setSelectedIndex(3));
-        
+
+        jTable.setRowHeight(60);
+        jTable.getColumnModel().getColumn(6).setCellRenderer(new RenderImagen());
+
+        // --- CENTRAR DATOS DEL RESTO DE COLUMNAS ---
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+        for (int i = 0; i < jTable.getColumnCount(); i++) {
+            if (i != 6) {  // evitar columna de imagen
+                jTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+            }
+        }
+
+        // COLOR DE FONDO PARA EL HEADER
+        javax.swing.table.JTableHeader header = jTable.getTableHeader();
+        header.setDefaultRenderer(new javax.swing.table.DefaultTableCellRenderer() {
+            @Override
+            public java.awt.Component getTableCellRendererComponent(
+                    javax.swing.JTable table, Object value, boolean isSelected,
+                    boolean hasFocus, int row, int column) {
+
+                java.awt.Component c = super.getTableCellRendererComponent(
+                        table, value, isSelected, hasFocus, row, column);
+                jTable.getTableHeader().setBackground(new java.awt.Color(89, 89, 89));
+
+                jScrollPane2.getViewport().setBackground(new java.awt.Color(89, 89, 89));
+                c.setBackground(new java.awt.Color(89, 89, 89));
+                c.setForeground(Color.WHITE);
+                setHorizontalAlignment(CENTER);
+                return c;
+            }
+        });
+
+        // Placeholder para txtBuscar
+        txtBuscar.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                if (txtBuscar.getText().equals("Buscar canciones, MP3, vinilos")) {
+                    txtBuscar.setText("");
+                }
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                if (txtBuscar.getText().trim().isEmpty()) {
+                    txtBuscar.setText("Buscar canciones, MP3, vinilos");
+                }
+            }
+        });
+
+        // Listener para abrir ventanas al hacer clic en filas de jTable
+        jTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int fila = jTable.getSelectedRow();
+                if (fila != -1) {
+                    // Obtener ID y tipo de la fila
+                    int id = Integer.parseInt(jTable.getValueAt(fila, 0).toString());
+                    String tipo = jTable.getValueAt(fila, 1).toString().toLowerCase();
+
+                    // Abrir ventana según tipo
+                    if (tipo.contains("vinilo")) {
+                        InfoVinilo infoVinilo = new InfoVinilo(id);
+                        infoVinilo.setVisible(true);
+                        infoVinilo.setLocationRelativeTo(null);
+                        infoVinilo.setResizable(false);
+                    } else if (tipo.contains("mp3")) {
+                        InfoMp3 infoMp3 = new InfoMp3(id);
+                        infoMp3.setVisible(true);
+                        infoMp3.setLocationRelativeTo(null);
+                        infoMp3.setResizable(false);
+                    } else if (tipo.contains("canción") || tipo.contains("cancion")) {
+                        InfoCancion infoCancion = new InfoCancion(id);
+                        infoCancion.setVisible(true);
+                        infoCancion.setLocationRelativeTo(null);
+                        infoCancion.setResizable(false);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Tipo de producto desconocido.");
+                    }
+                }
+            }
+        });
+
     }
 
     @SuppressWarnings("unchecked")
@@ -58,6 +159,10 @@ public class Comprador extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jlCrearCuenta1 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTable = new javax.swing.JTable();
+        txtBuscar = new javax.swing.JTextField();
+        btnBuscar = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jlCrearCuenta3 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
@@ -174,21 +279,60 @@ public class Comprador extends javax.swing.JFrame {
         jlCrearCuenta1.setForeground(new java.awt.Color(255, 255, 255));
         jlCrearCuenta1.setText("Catálogo");
 
+        jTable.setBackground(new java.awt.Color(89, 89, 89));
+        jTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "ID", "Producto", "Nombre", "Artista", "Género", "Precio", "Imagen"
+            }
+        ));
+        jTable.setGridColor(new java.awt.Color(89, 89, 89));
+        jTable.setSelectionBackground(new java.awt.Color(51, 51, 51));
+        jScrollPane3.setViewportView(jTable);
+
+        txtBuscar.setText("Buscar canciones, MP3, vinilos");
+
+        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/lupa 15px.png"))); // NOI18N
+        btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 627, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jlCrearCuenta1)
-                .addContainerGap(519, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jlCrearCuenta1)
-                .addContainerGap(297, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscar))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
 
         jTabbedPane1.addTab("tab1", jPanel1);
@@ -354,11 +498,113 @@ public class Comprador extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
         Login log = new Login();
         log.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        // Obtener el texto del campo de búsqueda
+        String filtro = txtBuscar.getText().trim();
+        // Si está vacío o es el placeholder, limpiar filtro y mostrar todo
+        if (filtro.isEmpty() || filtro.equals("Buscar canciones, MP3, vinilos")) {
+            txtBuscar.setText("Buscar canciones, MP3, vinilos");  // Restaurar placeholder
+            cargarCatalogo("");  // Mostrar todo
+        } else {
+            // Aplicar filtro
+            cargarCatalogo(filtro);
+        }
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void cargarCatalogo(String filtro) {
+        // Obtener todos los productos
+        CatalogoDAO dao = new CatalogoDAO();
+        List<ProductoCatalogo> listaCompleta = dao.listarTodo();
+
+        List<ProductoCatalogo> lista;
+        if (filtro != null && !filtro.trim().isEmpty()) {
+            String filtroLower = filtro.toLowerCase();
+            lista = listaCompleta.stream()
+                    .filter(p -> (p.getNombre() != null && p.getNombre().toLowerCase().contains(filtroLower))
+                    || (p.getArtista() != null && p.getArtista().toLowerCase().contains(filtroLower))
+                    || (p.getTipo() != null && p.getTipo().toLowerCase().contains(filtroLower)))
+                    .collect(java.util.stream.Collectors.toList());
+        } else {
+            lista = listaCompleta;
+        }
+
+        javax.swing.table.DefaultTableModel modelo
+                = (javax.swing.table.DefaultTableModel) jTable.getModel();
+        modelo.setRowCount(0);
+
+        for (ProductoCatalogo p : lista) {
+            ImageIcon icono = null;
+
+            // 1. Imagen desde BD
+            if (p.getImagen() != null) {
+                Image img = new ImageIcon(p.getImagen())
+                        .getImage()
+                        .getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+                icono = new ImageIcon(img);
+            }
+
+            JLabel lblImg;
+
+            // 2. Si tiene imagen BD 
+            if (icono != null) {
+                lblImg = new JLabel(icono);
+            } else {
+                // 3. Evitar NULL en el tipo
+                String tipo = (p.getTipo() == null) ? "" : p.getTipo().toLowerCase();
+                // 4. Seleccionar ruta por tipo
+                String ruta;
+
+                switch (tipo) {
+                    case "mp3":
+                    case "cancion":
+                    case "canción":   // con tilde
+                        ruta = "/Img/mp3.png";
+                        break;
+
+                    case "vinilo":
+                    case "disco":
+                    case "vinilo mp3":
+                    case "disco mp3":
+                        ruta = "/Img/disco.png";
+                        break;
+
+                    default:
+                        ruta = "/Img/mp3.png"; // fallback seguro
+                        break;
+                }
+
+                // 5. Cargar imagen (segura)
+                java.net.URL url = getClass().getResource(ruta);
+
+                if (url == null) {
+                    System.out.println("No se encontró la imagen: " + ruta);
+                    lblImg = new JLabel("No img");
+                } else {
+                    ImageIcon defaultIcon = new ImageIcon(url);
+                    Image imgDef = defaultIcon.getImage()
+                            .getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+                    lblImg = new JLabel(new ImageIcon(imgDef));
+                }
+            }
+
+            modelo.addRow(new Object[]{
+                p.getId(),
+                p.getTipo(),
+                p.getNombre(),
+                p.getArtista(),
+                p.getGenero(),
+                p.getPrecio(),
+                lblImg
+            });
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -386,6 +632,7 @@ public class Comprador extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCarritoDeCompras;
     private javax.swing.JButton btnCatalogo;
     private javax.swing.JButton btnCerrarSesion;
@@ -401,10 +648,12 @@ public class Comprador extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTable jTable;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel jlCrearCuenta1;
     private javax.swing.JLabel jlCrearCuenta2;
@@ -414,5 +663,6 @@ public class Comprador extends javax.swing.JFrame {
     private javax.swing.JPanel jpFondoComp;
     private javax.swing.JLabel lbComprador;
     private javax.swing.JLabel lbUsuarioComp;
+    private javax.swing.JTextField txtBuscar;
     // End of variables declaration//GEN-END:variables
 }

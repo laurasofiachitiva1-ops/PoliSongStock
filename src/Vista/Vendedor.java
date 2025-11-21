@@ -1,6 +1,5 @@
 package Vista;
 
-import Modelo.Cancion;
 import Modelo.CancionDAO;
 import Modelo.Cancion_disco_mp3DAO;
 import Modelo.Cancion_viniloDAO;
@@ -25,6 +24,7 @@ public class Vendedor extends javax.swing.JFrame {
 
     public Vendedor() {
         initComponents();
+        cargarCatalogo();
 
         jTable.setRowHeight(60);
         jTable.getColumnModel().getColumn(6).setCellRenderer(new RenderImagen());
@@ -429,11 +429,9 @@ public class Vendedor extends javax.swing.JFrame {
         log.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnCerrarSesionVActionPerformed
-
     private void cargarCatalogo() {
-
+        // Filtrar por vendedor actual: Obtener productos del vendedor
         int idVen = Sesion.getIdVendedor();
-
         CatalogoDAO dao = new CatalogoDAO();
         List<ProductoCatalogo> lista = dao.listarTodoPorVendedor(idVen);
 
@@ -442,7 +440,6 @@ public class Vendedor extends javax.swing.JFrame {
         modelo.setRowCount(0);
 
         for (ProductoCatalogo p : lista) {
-
             ImageIcon icono = null;
 
             // ======================
@@ -462,7 +459,6 @@ public class Vendedor extends javax.swing.JFrame {
             // ======================
             if (icono != null) {
                 lblImg = new JLabel(icono);
-
             } else {
                 // ======================
                 // 3. Evitar NULL en el tipo
@@ -499,7 +495,7 @@ public class Vendedor extends javax.swing.JFrame {
                 java.net.URL url = getClass().getResource(ruta);
 
                 if (url == null) {
-                    System.out.println("⚠ No se encontró la imagen: " + ruta);
+                    System.out.println("No se encontró la imagen: " + ruta);
                     lblImg = new JLabel("No img");
                 } else {
                     ImageIcon defaultIcon = new ImageIcon(url);
