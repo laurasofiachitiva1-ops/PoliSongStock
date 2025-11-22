@@ -1,4 +1,4 @@
-package Vista;
+package Vista.Vendedor;
 
 import Modelo.CancionDAO;
 import Modelo.Cancion_disco_mp3DAO;
@@ -9,6 +9,7 @@ import Modelo.Disco_viniloDAO;
 import Modelo.ProductoCatalogo;
 import Modelo.RenderImagen;
 import Modelo.Sesion;
+import Vista.Login;
 import java.awt.Color;
 import java.awt.Image;
 import java.util.List;

@@ -6,16 +6,18 @@ public class Comprador {
     private String correo;
     private String direccion;
     private String password;
+    private int compras;
 
     public Comprador() {
     }
 
-    public Comprador(int id_comprador, String nombre, String correo, String direccion, String password) {
+    public Comprador(int id_comprador, String nombre, String correo, String direccion, String password, int compras) {
         this.id_comprador = id_comprador;
         this.nombre = nombre;
         this.correo = correo;
         this.direccion = direccion;
         this.password = password;
+        this.compras = compras;
     }
 
     public int getId_comprador() {
@@ -57,5 +59,14 @@ public class Comprador {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public int getCompras() {
+        return compras;
+    }
+
+    public void setCompras(int compras) {
+        this.compras = compras;
+    }
+    
     
 }

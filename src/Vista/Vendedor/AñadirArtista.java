@@ -1,4 +1,4 @@
-package Vista;
+package Vista.Vendedor;
 
 import Modelo.Autor;
 import Modelo.AutorDAO;

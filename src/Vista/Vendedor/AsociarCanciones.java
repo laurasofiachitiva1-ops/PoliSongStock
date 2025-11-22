@@ -1,5 +1,6 @@
-package Vista;
+package Vista.Vendedor;
 
+import Vista.Vendedor.AgregarProducto;
 import Modelo.Cancion;
 import Modelo.CancionDAO;
 import Modelo.Cancion_disco_mp3;
@@ -15,9 +16,7 @@ import java.awt.Color;
 import java.awt.Image;
 import java.util.List;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableCellRenderer;
 
 public class AsociarCanciones extends javax.swing.JFrame {
 

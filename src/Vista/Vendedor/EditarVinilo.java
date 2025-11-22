@@ -1,12 +1,13 @@
-package Vista;
+package Vista.Vendedor;
 
+import Vista.Vendedor.Vendedor;
 import Modelo.AutorDAO;
 import Modelo.Cancion;
 import Modelo.CancionDAO;
-import Modelo.Cancion_disco_mp3;
-import Modelo.Cancion_disco_mp3DAO;
-import Modelo.Disco_mp3;
-import Modelo.Disco_mp3DAO;
+import Modelo.Cancion_vinilo;
+import Modelo.Cancion_viniloDAO;
+import Modelo.Disco_vinilo;
+import Modelo.Disco_viniloDAO;
 import Modelo.Sesion;
 import java.awt.Color;
 import java.awt.Image;
@@ -20,43 +21,43 @@ import javax.swing.JOptionPane;
 import static javax.swing.SwingConstants.CENTER;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class EditarMp3 extends javax.swing.JFrame {
+public class EditarVinilo extends javax.swing.JFrame {
 
     String Ruta = "";
 
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(EditarMp3.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(EditarVinilo.class.getName());
 
-    private int idMp3Editar;
+    private int idViniloEditar;
 
-    public EditarMp3(int idMp3) {
+    public EditarVinilo(int idVinilo) {
         initComponents();
-        idMp3Editar = idMp3;
+        idViniloEditar = idVinilo;
 
         // Primero cargar los artistas
         cargarArtistas();
 
-        // Cargar datos del mp3
-        cargarDatosMp3();
+        // Cargar datos del vinilo
+        cargarDatosVinilo();
 
-        // Cargar canciones del MP3 en jLista
-        cargarCancionesDelMp3(idMp3Editar);
-        
+        // Cargar canciones del vinilo en jLista
+        cargarCancionesDelVinilo(idViniloEditar);
+
         // Cargar canciones 
         cargarCancionesEnTabla();
 
         // Configurar cursores
         imgSalir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnSubirImagen.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnEditarMp3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnEditarVinilo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         // Cursor tipo mano en el botón añadir cancion
         btnAnadirCancion.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         // Cursor tipo mano en el botón añadir cancion
         btnBorrarCancion.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        
+
         // FORZAR QUE EL BOTÓN EMPECIE OCULTO
         btnBorrarCancion.setVisible(false);
-        
+
         // COLOR DE FONDO PARA EL HEADER
         javax.swing.table.JTableHeader header = jTable.getTableHeader();
         header.setDefaultRenderer(new javax.swing.table.DefaultTableCellRenderer() {
@@ -90,28 +91,29 @@ public class EditarMp3 extends javax.swing.JFrame {
 
     }
 
-    private void cargarDatosMp3() {
+    private void cargarDatosVinilo() {
 
-        Disco_mp3DAO dao = new Disco_mp3DAO();
-        Disco_mp3 m = dao.buscarPorIM(idMp3Editar);
+        Disco_viniloDAO dao = new Disco_viniloDAO();
+        Disco_vinilo v = dao.buscarPorIdV(idViniloEditar);
 
-        if (m == null) {
-            JOptionPane.showMessageDialog(this, "No se encontró el mp3.");
+        if (v == null) {
+            JOptionPane.showMessageDialog(this, "No se encontró el vinilo.");
             return;
         }
 
-        lbId.setText(String.valueOf(m.getId_disco_mp3()));
-        txtNomAlbum.setText(m.getNombre());
-        txtGeneroAlb.setText(m.getGenero());
-        txtAnioAlb.setText(String.valueOf(m.getAnio_salida()));
-        txtPrecioAlb.setText(String.valueOf(m.getPrecio()));
+        lbId.setText(String.valueOf(v.getId_disco_vinilo()));
+        txtNomAlbum.setText(v.getNombre());
+        txtGeneroAlb.setText(v.getGenero());
+        txtAnioAlb.setText(String.valueOf(v.getAnio_salida()));
+        txtPrecioAlb.setText(String.valueOf(v.getPrecio()));
+        txtInventario.setText(String.valueOf(v.getCantidad()));
 
         // Seleccionar artista por nombre
-        cmbArtistaVinl.setSelectedItem(m.getAutorNombre());
+        cmbArtistaVinl.setSelectedItem(v.getAutorNombre());
 
         // Cargar imagen si existe
-        if (m.getImagen() != null) {
-            ImageIcon icono = new ImageIcon(m.getImagen());
+        if (v.getImagen() != null) {
+            ImageIcon icono = new ImageIcon(v.getImagen());
             Image img = icono.getImage().getScaledInstance(
                     imagenDisco.getWidth(),
                     imagenDisco.getHeight(),
@@ -132,9 +134,9 @@ public class EditarMp3 extends javax.swing.JFrame {
         }
     }
 
-    private void cargarCancionesDelMp3(int idMp3) {
-        Cancion_disco_mp3DAO camD = new Cancion_disco_mp3DAO();
-        List<Cancion> lista = camD.listarCancionesPorMp3(idMp3);
+    private void cargarCancionesDelVinilo(int idVinilo) {
+        Cancion_viniloDAO cavD = new Cancion_viniloDAO();
+        List<Cancion> lista = cavD.listarCancionesPorVinilo(idVinilo);
 
         javax.swing.DefaultListModel<String> modelo = new javax.swing.DefaultListModel<>();
 
@@ -153,8 +155,6 @@ public class EditarMp3 extends javax.swing.JFrame {
 
         lbVendedor = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        btnEditarMp3 = new javax.swing.JButton();
-        btnSubirImagen = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         imagenDisco = new javax.swing.JLabel();
         imgSalir = new javax.swing.JLabel();
@@ -180,38 +180,20 @@ public class EditarMp3 extends javax.swing.JFrame {
         btnAnadirCancion = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JSeparator();
         jSeparator3 = new javax.swing.JSeparator();
+        txtInventario = new javax.swing.JTextField();
+        lbVendedor4 = new javax.swing.JLabel();
+        btnEditarVinilo = new javax.swing.JButton();
+        btnSubirImagen = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         lbVendedor.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        lbVendedor.setText("Editar MP3");
+        lbVendedor.setText("Editar vinilo");
         getContentPane().add(lbVendedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 6, -1, -1));
 
         jSeparator1.setForeground(new java.awt.Color(51, 51, 51));
         getContentPane().add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 44, 710, 10));
-
-        btnEditarMp3.setBackground(new java.awt.Color(204, 204, 204));
-        btnEditarMp3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnEditarMp3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/editar15px.png"))); // NOI18N
-        btnEditarMp3.setText("Editar MP3");
-        btnEditarMp3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditarMp3ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnEditarMp3, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 260, 200, -1));
-
-        btnSubirImagen.setBackground(new java.awt.Color(153, 153, 153));
-        btnSubirImagen.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnSubirImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/subir.png"))); // NOI18N
-        btnSubirImagen.setText("Subir imagen");
-        btnSubirImagen.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSubirImagenActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnSubirImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 60, 200, -1));
 
         jPanel1.setBackground(new java.awt.Color(89, 89, 89));
 
@@ -315,6 +297,31 @@ public class EditarMp3 extends javax.swing.JFrame {
 
         jSeparator3.setForeground(new java.awt.Color(51, 51, 51));
 
+        txtInventario.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        lbVendedor4.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lbVendedor4.setText("Inventario");
+
+        btnEditarVinilo.setBackground(new java.awt.Color(204, 204, 204));
+        btnEditarVinilo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnEditarVinilo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/editar15px.png"))); // NOI18N
+        btnEditarVinilo.setText("Editar Vinilo");
+        btnEditarVinilo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarViniloActionPerformed(evt);
+            }
+        });
+
+        btnSubirImagen.setBackground(new java.awt.Color(153, 153, 153));
+        btnSubirImagen.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnSubirImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/subir.png"))); // NOI18N
+        btnSubirImagen.setText("Subir imagen");
+        btnSubirImagen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSubirImagenActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -328,50 +335,68 @@ public class EditarMp3 extends javax.swing.JFrame {
                         .addGap(30, 30, 30))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbVendedor3)
-                            .addComponent(lbVendedor5)
-                            .addComponent(lbVendedor9)
-                            .addComponent(lbVendedor8)
-                            .addComponent(lbVendedor2)
-                            .addComponent(lbVendedor1)
-                            .addComponent(jlcan, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(42, 42, 42)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(txtAnioAlb, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtPrecioAlb, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtGeneroAlb, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtNomAlbum, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(cmbArtistaVinl, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbId))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(imagenDisco, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(77, 77, 77))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(48, 48, 48)
-                                .addComponent(btnBorrarCancion, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(61, Short.MAX_VALUE))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbtitulo2)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 667, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap())))
+                        .addContainerGap(62, Short.MAX_VALUE))))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(271, 271, 271)
                 .addComponent(btnAnadirCancion, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jSeparator2)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lbVendedor3)
+                                    .addComponent(lbVendedor5)
+                                    .addComponent(lbVendedor9)
+                                    .addComponent(lbVendedor8)
+                                    .addComponent(lbVendedor2)
+                                    .addComponent(lbVendedor1)
+                                    .addComponent(lbVendedor4)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(jlcan, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(1, 1, 1)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(42, 42, 42)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(txtAnioAlb, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtPrecioAlb, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtGeneroAlb, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtNomAlbum, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtInventario, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(cmbArtistaVinl, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lbId)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(41, 41, 41)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnEditarVinilo, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnSubirImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(57, 57, 57))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(63, 63, 63)
+                                        .addComponent(imagenDisco, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(46, 46, 46)
+                                        .addComponent(btnBorrarCancion, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator3)
+                            .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap())
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jSeparator3)
-                    .addContainerGap()))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -379,58 +404,70 @@ public class EditarMp3 extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(imgSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(47, 47, 47)
-                        .addComponent(imagenDisco, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(imgSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(213, 213, 213))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lbVendedor1)
+                                .addGap(18, 18, 18)
+                                .addComponent(lbVendedor2)
+                                .addGap(18, 18, 18)
+                                .addComponent(lbVendedor8)
+                                .addGap(18, 18, 18)
+                                .addComponent(lbVendedor9)
+                                .addGap(18, 18, 18)
+                                .addComponent(lbVendedor5)
+                                .addGap(8, 8, 8))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lbId)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cmbArtistaVinl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtNomAlbum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtGeneroAlb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtAnioAlb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(9, 9, 9)
+                                .addComponent(txtPrecioAlb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lbVendedor3))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lbVendedor1)
-                        .addGap(18, 18, 18)
-                        .addComponent(lbVendedor2)
-                        .addGap(18, 18, 18)
-                        .addComponent(lbVendedor8)
-                        .addGap(18, 18, 18)
-                        .addComponent(lbVendedor9)
-                        .addGap(18, 18, 18)
-                        .addComponent(lbVendedor5)
-                        .addGap(8, 8, 8))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lbId)
+                        .addComponent(btnSubirImagen)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmbArtistaVinl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtNomAlbum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtGeneroAlb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtAnioAlb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(9, 9, 9)
+                        .addComponent(imagenDisco, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbVendedor3)
-                    .addComponent(txtPrecioAlb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(lbVendedor4)
+                    .addComponent(txtInventario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEditarVinilo))
+                .addGap(5, 5, 5)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(4, 4, 4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnBorrarCancion, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnBorrarCancion, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jlcan)
-                        .addGap(19, 19, 19)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                        .addGap(48, 48, 48)))
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbtitulo2)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnAnadirCancion)
                 .addGap(14, 14, 14))
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                    .addContainerGap(418, Short.MAX_VALUE)
-                    .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(246, 246, 246)))
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 750, 680));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 750, 690));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -465,25 +502,27 @@ public class EditarMp3 extends javax.swing.JFrame {
         }
     }
 
-    private void actualizarMp3() {
+    private void actualizarVinilo() {
         // ===== OBTENER DATOS DEL FORMULARIO =====
         String nombre = txtNomAlbum.getText().trim();
         String genero = txtGeneroAlb.getText().trim();
         String anioTxt = txtAnioAlb.getText().trim();
         String precioTxt = txtPrecioAlb.getText().trim();
+        String inventarioTxt = txtInventario.getText().trim();
         String artista = (String) cmbArtistaVinl.getSelectedItem();
 
         // ===== OBTENER ORIGINAL DE LA BD =====
-        Disco_mp3DAO dao = new Disco_mp3DAO();
-        Disco_mp3 original = dao.buscarPorIM(idMp3Editar);
+        Disco_viniloDAO dao = new Disco_viniloDAO();
+        Disco_vinilo original = dao.buscarPorIdV(idViniloEditar);
 
         if (original == null) {
-            JOptionPane.showMessageDialog(this, "Error: el mp3 ya no existe.");
+            JOptionPane.showMessageDialog(this, "Error: el vinilo ya no existe.");
             return;
         }
 
         // Validar campos vacíos
-        if (nombre.isEmpty() || genero.isEmpty() || anioTxt.isEmpty() || precioTxt.isEmpty() || artista == null) {
+        if (nombre.isEmpty() || genero.isEmpty() || anioTxt.isEmpty() || inventarioTxt.isEmpty()
+                || precioTxt.isEmpty() || artista == null) {
             JOptionPane.showMessageDialog(this, "Por favor llene todos los campos.");
             return;
         }
@@ -503,11 +542,13 @@ public class EditarMp3 extends javax.swing.JFrame {
         }
 
         // Validar números restantes
+        int inventario;
         double precioVal;
         try {
+            inventario = Integer.parseInt(inventarioTxt);
             precioVal = Double.parseDouble(precioTxt);
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "El campo de precio debe ser numéricos.");
+            JOptionPane.showMessageDialog(this, "Los campos de inventario y precio deben ser numéricos.");
             return;
         }
 
@@ -525,6 +566,7 @@ public class EditarMp3 extends javax.swing.JFrame {
         boolean sinCambios = java.util.Objects.equals(nombre, original.getNombre())
                 && java.util.Objects.equals(genero, original.getGenero())
                 && anioSalida == original.getAnio_salida()
+                && inventario == original.getCantidad()
                 && Math.abs(precioVal - original.getPrecio()) < 0.001
                 && java.util.Objects.equals(artista, original.getAutorNombre())
                 && !imagenCambiada;
@@ -536,30 +578,30 @@ public class EditarMp3 extends javax.swing.JFrame {
 
         // ===== CREAR OBJETO MODIFICADO =====
         int idAutorNuevo = new AutorDAO().obtenerIdPorNombre(artista);
-        Disco_mp3 modificada = new Disco_mp3();
-        modificada.setId_disco_mp3(idMp3Editar);
+        Disco_vinilo modificada = new Disco_vinilo();
+        modificada.setId_disco_vinilo(idViniloEditar);
         modificada.setNombre(nombre);
         modificada.setGenero(genero);
         modificada.setAnio_salida(anioSalida);
+        modificada.setCantidad(inventario);
         modificada.setPrecio(precioVal);
         modificada.setId_autor(idAutorNuevo);
         modificada.setId_vendedor(original.getId_vendedor());
         modificada.setImagen(nuevaImagenBytes != null ? nuevaImagenBytes : original.getImagen());
 
         // ===== GUARDAR CAMBIOS =====
-        boolean ok = dao.modificarMp3(modificada);
+        boolean ok = dao.modificarVinilo(modificada);
         if (ok) {
-            JOptionPane.showMessageDialog(this, "Mp3 modificado correctamente.");
+            JOptionPane.showMessageDialog(this, "Vinilo modificado correctamente.");
             Ruta = "";
         } else {
-            JOptionPane.showMessageDialog(this, "Error al modificar el mp3.");
+            JOptionPane.showMessageDialog(this, "Error al modificar el vinilo.");
         }
     }
-
-
-    private void btnEditarMp3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarMp3ActionPerformed
-        actualizarMp3();
-    }//GEN-LAST:event_btnEditarMp3ActionPerformed
+    
+    private void btnEditarViniloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarViniloActionPerformed
+        actualizarVinilo();
+    }//GEN-LAST:event_btnEditarViniloActionPerformed
 
     private void imgSalirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgSalirMouseClicked
 
@@ -593,7 +635,7 @@ public class EditarMp3 extends javax.swing.JFrame {
 
         jTable.setModel(modelo);
     }
-    
+
     private void btnBorrarCancionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarCancionActionPerformed
         // 1. Validar selección
         int index = jLista.getSelectedIndex();
@@ -607,10 +649,10 @@ public class EditarMp3 extends javax.swing.JFrame {
         // 3. Obtener ID del disco
         int idDisco = Integer.parseInt(lbId.getText().trim());
         // 4. Eliminar la canción de MP3
-        Cancion_disco_mp3DAO cmDAO = new Cancion_disco_mp3DAO();
-        boolean ok = cmDAO.eliminarCancionDeMp3(idDisco, idCancion);
+        Cancion_viniloDAO cmDAO = new Cancion_viniloDAO();
+        boolean ok = cmDAO.eliminarCancionDeVinilo(idDisco, idCancion);
         if (ok) {
-            cargarCancionesDelMp3(idDisco);
+            cargarCancionesDelVinilo(idDisco);
             JOptionPane.showMessageDialog(this, "Canción eliminada correctamente.");
         } else {
             JOptionPane.showMessageDialog(this, "No se pudo eliminar la canción.");
@@ -653,19 +695,19 @@ public class EditarMp3 extends javax.swing.JFrame {
         }
 
         // 5. Crear objeto y verificar duplicado
-        Cancion_disco_mp3 cmp3 = new Cancion_disco_mp3();
-        cmp3.setId_cancion(idCancion);
-        cmp3.setId_disco_mp3(idDisco);
-        Cancion_disco_mp3DAO cmp3D = new Cancion_disco_mp3DAO();
-        if (cmp3D.existeCancionEnMp3(idDisco, idCancion)) {
-            JOptionPane.showMessageDialog(this, "Esta canción ya está asociada a este MP3.");
+        Cancion_vinilo cv = new Cancion_vinilo();
+        cv.setId_cancion(idCancion);
+        cv.setId_disco_vinilo(idDisco);
+        Cancion_viniloDAO cvD = new Cancion_viniloDAO();
+        if (cvD.existeCancionEnVinilo(idDisco, idCancion)) {
+            JOptionPane.showMessageDialog(this, "Esta canción ya está asociada a este vinilo.");
             return;
         }
         // 6. Agregar la canción
-        boolean ok = cmp3D.agregarCancionAMp3(cmp3);
+        boolean ok = cvD.agregarCancionAVinilo(cv);
         if (ok) {
-            cargarCancionesDelMp3(idDisco);
-            JOptionPane.showMessageDialog(this, "Canción agregada correctamente al MP3.");
+            cargarCancionesDelVinilo(idDisco);
+            JOptionPane.showMessageDialog(this, "Canción agregada correctamente al vinilo.");
         } else {
             JOptionPane.showMessageDialog(this, "No se pudo agregar la canción.");
         }
@@ -699,7 +741,7 @@ public class EditarMp3 extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAnadirCancion;
     private javax.swing.JButton btnBorrarCancion;
-    private javax.swing.JButton btnEditarMp3;
+    private javax.swing.JButton btnEditarVinilo;
     private javax.swing.JButton btnSubirImagen;
     private javax.swing.JComboBox<String> cmbArtistaVinl;
     private javax.swing.JLabel imagenDisco;
@@ -718,12 +760,14 @@ public class EditarMp3 extends javax.swing.JFrame {
     private javax.swing.JLabel lbVendedor1;
     private javax.swing.JLabel lbVendedor2;
     private javax.swing.JLabel lbVendedor3;
+    private javax.swing.JLabel lbVendedor4;
     private javax.swing.JLabel lbVendedor5;
     private javax.swing.JLabel lbVendedor8;
     private javax.swing.JLabel lbVendedor9;
     private javax.swing.JLabel lbtitulo2;
     private javax.swing.JTextField txtAnioAlb;
     private javax.swing.JTextField txtGeneroAlb;
+    private javax.swing.JTextField txtInventario;
     private javax.swing.JTextField txtNomAlbum;
     private javax.swing.JTextField txtPrecioAlb;
     // End of variables declaration//GEN-END:variables

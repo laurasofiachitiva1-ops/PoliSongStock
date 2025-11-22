@@ -1,4 +1,4 @@
-package Vista;
+package Vista.Comprador;
 
 import Modelo.CatalogoDAO;
 import Modelo.ProductoCatalogo;
@@ -11,9 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import static javax.swing.SwingConstants.CENTER;
 import javax.swing.table.DefaultTableCellRenderer;
-import Vista.InfoVinilo;  
-import Vista.InfoMp3;     
-import Vista.InfoCancion; 
+import Vista.Login;
 
 public class Comprador extends javax.swing.JFrame {
 

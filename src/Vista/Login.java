@@ -1,5 +1,7 @@
 package Vista;
 
+import Vista.Comprador.Comprador;
+import Vista.Vendedor.Vendedor;
 import Modelo.CompradorDAO;
 import Modelo.Sesion;
 import Modelo.VendedorDAO;

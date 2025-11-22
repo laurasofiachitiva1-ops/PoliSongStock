@@ -238,22 +238,19 @@ public class CreateAccount extends javax.swing.JFrame {
 
     private void btnRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarseActionPerformed
 
-        String usuario = txtDireccionC.getText().trim();
+        String usuario = txtUsuarioC.getText().trim(); 
         String email = txtEmail.getText().trim();
         String contrasena = String.valueOf(txtContrasenaC.getPassword());
         String confirmar = String.valueOf(txtConfContrasena.getPassword());
         String direccion = txtDireccionC.getText().trim();
-
         if (usuario.isEmpty() || email.isEmpty() || contrasena.isEmpty() || confirmar.isEmpty() || direccion.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Por favor, llene todos los campos");
             return;
         }
-
         if (!rdbComprador.isSelected() && !rdbVendedor.isSelected()) {
             JOptionPane.showMessageDialog(null, "Seleccione un tipo de cuenta");
             return;
         }
-
         if (!contrasena.equals(confirmar)) {
             JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden");
             return;
@@ -262,22 +259,18 @@ public class CreateAccount extends javax.swing.JFrame {
         // Verificar el correo en AMBAS tablas
         boolean correoExisteEnComprador = comD.existeCorreo(email);
         boolean correoExisteEnVendedor = venD.existeCorreo(email);
-
         if (correoExisteEnComprador || correoExisteEnVendedor) {
             JOptionPane.showMessageDialog(null, "Ya existe un usuario registrado con este correo.");
             return;
         }
-
         boolean registroExitoso = false;
-
         if (rdbComprador.isSelected()) {
             com.setNombre(usuario);
             com.setCorreo(email);
             com.setPassword(contrasena);
             com.setDireccion(direccion);
-
+            com.setCompras(0);  // Agregado: Inicializa compras en 0
             registroExitoso = comD.CrearComprador(com);
-
         } else if (rdbVendedor.isSelected()) {
             ven.setNombre(usuario);
             ven.setCorreo(email);
@@ -286,7 +279,6 @@ public class CreateAccount extends javax.swing.JFrame {
 
             registroExitoso = venD.CrearVendedor(ven);
         }
-
         if (registroExitoso) {
             JOptionPane.showMessageDialog(null, "Usuario creado correctamente");
             Login log = new Login();

@@ -113,6 +113,8 @@ public class CancionDAO {
                 c.setTamano_mb(rs.getDouble("tamano_mb"));
                 c.setCalidad_kbps(rs.getInt("calidad_kbps"));
                 c.setPrecio(rs.getDouble("precio"));
+                
+                c.setId_vendedor(rs.getInt("id_vendedor"));
 
             }
 

@@ -52,6 +52,7 @@ public class CompradorDAO {
                 c.setCorreo(rs.getString("correo"));
                 c.setDireccion(rs.getString("direccion"));
                 c.setPassword(rs.getString("password"));
+                c.setCompras(rs.getInt("compras"));
             }
         } catch (SQLException e) {
             System.out.println(e.toString());

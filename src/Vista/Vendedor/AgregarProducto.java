@@ -1,5 +1,7 @@
-package Vista;
+package Vista.Vendedor;
 
+import Vista.Vendedor.AñadirArtista;
+import Vista.Vendedor.Vendedor;
 import Modelo.AutorDAO;
 import Modelo.Cancion;
 import Modelo.CancionDAO;
