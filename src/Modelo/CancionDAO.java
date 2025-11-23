@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import java.sql.ResultSet;
+     
 
 public class CancionDAO {
 
@@ -40,6 +41,52 @@ public class CancionDAO {
                 System.out.println(e.toString());
             }
         }
+    }
+
+    public List<Cancion> listarTodas() {
+        List<Cancion> lista = new ArrayList<>();
+        String sql = "SELECT c.*, a.nombre AS autorNombre "
+                + "FROM cancion c "
+                + "JOIN autor a ON c.id_autor = a.id_autor";
+
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Cancion c = new Cancion();
+                c.setId_cancion(rs.getInt("id_cancion"));
+                c.setId_autor(rs.getInt("id_autor"));
+                c.setAutorNombre(rs.getString("autorNombre"));
+                c.setNombre(rs.getString("nombre"));
+                c.setGenero(rs.getString("genero"));
+                c.setDuracion(rs.getString("duracion"));
+                c.setTamano_mb(rs.getDouble("tamano_mb"));
+                c.setCalidad_kbps(rs.getInt("calidad_kbps"));
+                c.setPrecio(rs.getDouble("precio"));
+                c.setId_vendedor(rs.getInt("id_vendedor"));
+                lista.add(c);
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al listar todas las canciones: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                System.out.println(e.toString());
+            }
+        }
+        return lista;
     }
 
     public List<Cancion> listarCancionesPorVendedor(int idVendedor) {
@@ -113,7 +160,7 @@ public class CancionDAO {
                 c.setTamano_mb(rs.getDouble("tamano_mb"));
                 c.setCalidad_kbps(rs.getInt("calidad_kbps"));
                 c.setPrecio(rs.getDouble("precio"));
-                
+
                 c.setId_vendedor(rs.getInt("id_vendedor"));
 
             }
@@ -148,5 +195,19 @@ public class CancionDAO {
             return false;
         }
     }
+    
+    public static void main(String[] args) {
+         CancionDAO dao = new CancionDAO();
+         List<Cancion> lista = dao.listarTodas();
+         System.out.println("Lista: " + lista);
+         if (lista != null && !lista.isEmpty()) {
+             for (Cancion c : lista) {
+                 System.out.println(c.getNombre() + " - " + c.getAutorNombre());
+             }
+         } else {
+             System.out.println("Lista vacía o null - Error en BD o consulta");
+         }
+         
+         }
 
 }

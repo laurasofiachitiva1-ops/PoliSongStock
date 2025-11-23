@@ -25,8 +25,13 @@ import Modelo.Venta;
 import Modelo.VentaDAO;
 import Modelo.Detalle_venta;
 import Modelo.Detalle_ventaDAO;
+import Modelo.ListaRenderer;
+import Modelo.Lista_reproduccion;
+import Modelo.Lista_reproduccionDAO;
 import java.util.List;
-
+import javax.swing.DefaultListModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class Comprador extends javax.swing.JFrame {
 
@@ -56,6 +61,8 @@ public class Comprador extends javax.swing.JFrame {
         btnEditar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnPagar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
+        btnNueva.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
         // Ocultar las pestañas (tabs)
         jTabbedPane1.setUI(new javax.swing.plaf.basic.BasicTabbedPaneUI() {
             @Override
@@ -66,8 +73,8 @@ public class Comprador extends javax.swing.JFrame {
 
         // Cambiar tabs con botones
         btnCatalogo.addActionListener(e -> jTabbedPane1.setSelectedIndex(0));
-        btnMisRecopilaciones.addActionListener(e -> jTabbedPane1.setSelectedIndex(2));
-        btnCarritoDeCompras.addActionListener(e -> jTabbedPane1.setSelectedIndex(3));
+        btnMisRecopilaciones.addActionListener(e -> jTabbedPane1.setSelectedIndex(3));
+        btnCarritoDeCompras.addActionListener(e -> jTabbedPane1.setSelectedIndex(2));
         btnHistorialDeCompras.addActionListener(e -> jTabbedPane1.setSelectedIndex(1));
 
         // Listener para recargar carrito al cambiar a la pestaña
@@ -287,10 +294,64 @@ public class Comprador extends javax.swing.JFrame {
                 }
             }
         });
-        
 
-        
+        cargarListasReproduccion();
 
+        // Aplicar renderer con imagen por defecto
+        listaComprador.setCellRenderer(new ListaRenderer());
+        listaPublica.setCellRenderer(new ListaRenderer());
+
+        // Agregar listener para listaComprador
+        listaComprador.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {  // Evitar eventos duplicados
+                    String selected = listaComprador.getSelectedValue();
+                    if (selected != null) {
+                        int idLista = extraerIdDeTexto(selected);
+                        if (idLista != -1) {
+                            Recopilacion recopilacion = new Recopilacion(idLista, Comprador.this);  // Pasar 'this' como padre
+                            recopilacion.setVisible(true);
+                            recopilacion.setLocationRelativeTo(null);
+                            recopilacion.setResizable(false);
+                        } else {
+                            JOptionPane.showMessageDialog(Comprador.this, "Error al extraer ID de la lista.");
+                        }
+                    }
+                }
+            }
+        });
+
+    // Agregar listener para listaPublica
+        listaPublica.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {  // Evitar eventos duplicados
+                    String selected = listaPublica.getSelectedValue();
+                    if (selected != null) {
+                        int idLista = extraerIdDeTexto(selected);
+                        if (idLista != -1) {
+                            Recopilacion recopilacion = new Recopilacion(idLista, Comprador.this);  // Pasar 'this' como padre
+                            recopilacion.setVisible(true);
+                            recopilacion.setLocationRelativeTo(null);
+                            recopilacion.setResizable(false);
+                        } else {
+                            JOptionPane.showMessageDialog(Comprador.this, "Error al extraer ID de la lista.");
+                        }
+                    }
+                }
+            }
+        });
+
+        // Listener para recargar carrito o listas al cambiar a la pestaña
+        jTabbedPane1.addChangeListener(e -> {
+            int selectedIndex = jTabbedPane1.getSelectedIndex();
+            if (selectedIndex == 2) {
+                cargarCarrito();
+            } else if (selectedIndex == 3) {
+                cargarListasReproduccion();
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")
@@ -323,10 +384,6 @@ public class Comprador extends javax.swing.JFrame {
         jlCrearCuenta4 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jPanel2 = new javax.swing.JPanel();
-        jlCrearCuenta2 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
         jPanel3 = new javax.swing.JPanel();
         jlCrearCuenta3 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -341,6 +398,14 @@ public class Comprador extends javax.swing.JFrame {
         totalpago = new javax.swing.JLabel();
         btnEliminar = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jlCrearCuenta2 = new javax.swing.JLabel();
+        btnNueva = new javax.swing.JButton();
+        jlCrearCuenta6 = new javax.swing.JLabel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        listaPublica = new javax.swing.JList<>();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        listaComprador = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -564,42 +629,6 @@ public class Comprador extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("tab4", jPanel4);
 
-        jPanel2.setBackground(new java.awt.Color(51, 51, 51));
-
-        jlCrearCuenta2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jlCrearCuenta2.setForeground(new java.awt.Color(255, 255, 255));
-        jlCrearCuenta2.setText("Mis recopilaciones");
-
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(jList1);
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jlCrearCuenta2)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(299, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jlCrearCuenta2)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(133, Short.MAX_VALUE))
-        );
-
-        jTabbedPane1.addTab("tab2", jPanel2);
-
         jPanel3.setBackground(new java.awt.Color(51, 51, 51));
 
         jlCrearCuenta3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -746,6 +775,81 @@ public class Comprador extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("tab3", jPanel3);
 
+        jPanel2.setBackground(new java.awt.Color(51, 51, 51));
+
+        jlCrearCuenta2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jlCrearCuenta2.setForeground(new java.awt.Color(255, 255, 255));
+        jlCrearCuenta2.setText("Mis recopilaciones");
+
+        btnNueva.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/mas 15px.png"))); // NOI18N
+        btnNueva.setText("Nueva recopilación");
+        btnNueva.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevaActionPerformed(evt);
+            }
+        });
+
+        jlCrearCuenta6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jlCrearCuenta6.setForeground(new java.awt.Color(255, 255, 255));
+        jlCrearCuenta6.setText("Recopilaciones públicas");
+
+        listaPublica.setBackground(new java.awt.Color(89, 89, 89));
+        listaPublica.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        listaPublica.setSelectionBackground(new java.awt.Color(51, 51, 51));
+        jScrollPane6.setViewportView(listaPublica);
+
+        listaComprador.setBackground(new java.awt.Color(89, 89, 89));
+        listaComprador.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        listaComprador.setSelectionBackground(new java.awt.Color(51, 51, 51));
+        jScrollPane7.setViewportView(listaComprador);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jlCrearCuenta2)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane6)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(btnNueva, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane7)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jlCrearCuenta6)
+                                .addGap(0, 413, Short.MAX_VALUE)))))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jlCrearCuenta2)
+                .addGap(7, 7, 7)
+                .addComponent(btnNueva, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(9, 9, 9)
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jlCrearCuenta6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("tab2", jPanel2);
+
         javax.swing.GroupLayout jpFondoCompLayout = new javax.swing.GroupLayout(jpFondoComp);
         jpFondoComp.setLayout(jpFondoCompLayout);
         jpFondoCompLayout.setHorizontalGroup(
@@ -794,6 +898,41 @@ public class Comprador extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private int extraerIdDeTexto(String texto) {
+        try {
+            // Buscar "ID: " y extraer el número después
+            int index = texto.indexOf("ID: ");
+            if (index != -1) {
+                String idStr = texto.substring(index + 4).replace(")", "").trim();  // Remover ")" y espacios
+                return Integer.parseInt(idStr);
+            }
+        } catch (NumberFormatException | StringIndexOutOfBoundsException ex) {
+            // Manejar errores de parsing
+        }
+        return -1;  // Retornar -1 si falla
+    }
+
+    public void cargarListasReproduccion() {
+        int idComprador = Sesion.getIdComprador();
+        Lista_reproduccionDAO dao = new Lista_reproduccionDAO();
+
+        // Cargar listas del comprador (sin nombre del creador, ya que es el mismo)
+        List<Lista_reproduccion> listasComprador = dao.listarListasPorComprador(idComprador);
+        javax.swing.DefaultListModel<String> modeloComprador = new javax.swing.DefaultListModel<>();
+        for (Lista_reproduccion l : listasComprador) {
+            modeloComprador.addElement(l.getNombre() + " (ID: " + l.getId_lista() + ")");
+        }
+        listaComprador.setModel(modeloComprador);
+
+        // Cargar listas públicas (con nombre del creador)
+        List<Lista_reproduccion> listasPublicas = dao.listarListasPublicas(idComprador);
+        javax.swing.DefaultListModel<String> modeloPublica = new javax.swing.DefaultListModel<>();
+        for (Lista_reproduccion l : listasPublicas) {
+            modeloPublica.addElement(l.getNombre() + " (Creador: " + l.getNombre_creador() + ", ID: " + l.getId_lista() + ")");
+        }
+        listaPublica.setModel(modeloPublica);
+    }
 
 
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
@@ -1011,118 +1150,125 @@ public class Comprador extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Venta realizada exitosamente.");
     }//GEN-LAST:event_btnPagarActionPerformed
 
+    private void btnNuevaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaActionPerformed
+        CrearReco crearReco = new CrearReco(this);
+        crearReco.setVisible(true);
+        crearReco.setLocationRelativeTo(null);
+        crearReco.setResizable(false);
+    }//GEN-LAST:event_btnNuevaActionPerformed
+
     private void cargarCatalogo(String filtro) {
-    // Obtener todos los productos
-    CatalogoDAO dao = new CatalogoDAO();
-    List<ProductoCatalogo> listaCompleta = dao.listarTodo();
+        // Obtener todos los productos
+        CatalogoDAO dao = new CatalogoDAO();
+        List<ProductoCatalogo> listaCompleta = dao.listarTodo();
 
-    List<ProductoCatalogo> lista;
-    if (filtro != null && !filtro.trim().isEmpty()) {
-        String filtroLower = filtro.toLowerCase();
-        lista = listaCompleta.stream()
-                .filter(p -> (p.getNombre() != null && p.getNombre().toLowerCase().contains(filtroLower))
-                || (p.getArtista() != null && p.getArtista().toLowerCase().contains(filtroLower))
-                || (p.getTipo() != null && p.getTipo().toLowerCase().contains(filtroLower)))
-                .collect(java.util.stream.Collectors.toList());
-    } else {
-        lista = listaCompleta;
-    }
-
-    javax.swing.table.DefaultTableModel modelo
-            = (javax.swing.table.DefaultTableModel) jTable.getModel();
-    modelo.setRowCount(0);
-
-    for (ProductoCatalogo p : lista) {
-        ImageIcon icono = null;
-
-        // 1. Imagen desde BD
-        if (p.getImagen() != null) {
-            Image img = new ImageIcon(p.getImagen())
-                    .getImage()
-                    .getScaledInstance(60, 60, Image.SCALE_SMOOTH);
-            icono = new ImageIcon(img);
-        }
-
-        JLabel lblImg;
-
-        // 2. Si tiene imagen BD 
-        if (icono != null) {
-            lblImg = new JLabel(icono);
+        List<ProductoCatalogo> lista;
+        if (filtro != null && !filtro.trim().isEmpty()) {
+            String filtroLower = filtro.toLowerCase();
+            lista = listaCompleta.stream()
+                    .filter(p -> (p.getNombre() != null && p.getNombre().toLowerCase().contains(filtroLower))
+                    || (p.getArtista() != null && p.getArtista().toLowerCase().contains(filtroLower))
+                    || (p.getTipo() != null && p.getTipo().toLowerCase().contains(filtroLower)))
+                    .collect(java.util.stream.Collectors.toList());
         } else {
-            // 3. Evitar NULL en el tipo
-            String tipo = (p.getTipo() == null) ? "" : p.getTipo().toLowerCase();
-            // 4. Seleccionar ruta por tipo
-            String ruta;
-
-            switch (tipo) {
-                case "mp3":
-                case "cancion":
-                case "canción":   // con tilde
-                    ruta = "/Img/mp3.png";
-                    break;
-
-                case "vinilo":
-                case "disco":
-                case "vinilo mp3":
-                case "disco mp3":
-                    ruta = "/Img/disco.png";
-                    break;
-
-                default:
-                    ruta = "/Img/mp3.png"; // fallback seguro
-                    break;
-            }
-
-            // 5. Cargar imagen (segura)
-            java.net.URL url = getClass().getResource(ruta);
-
-            if (url == null) {
-                System.out.println("No se encontró la imagen: " + ruta);
-                lblImg = new JLabel("No img");
-            } else {
-                ImageIcon defaultIcon = new ImageIcon(url);
-                Image imgDef = defaultIcon.getImage()
-                        .getScaledInstance(60, 60, Image.SCALE_SMOOTH);
-                lblImg = new JLabel(new ImageIcon(imgDef));
-            }
+            lista = listaCompleta;
         }
 
-        modelo.addRow(new Object[]{
-            p.getId(),
-            p.getTipo(),
-            p.getNombre(),
-            p.getArtista(),
-            p.getGenero(),
-            p.getPrecio(),
-            lblImg
-        });
+        javax.swing.table.DefaultTableModel modelo
+                = (javax.swing.table.DefaultTableModel) jTable.getModel();
+        modelo.setRowCount(0);
+
+        for (ProductoCatalogo p : lista) {
+            ImageIcon icono = null;
+
+            // 1. Imagen desde BD
+            if (p.getImagen() != null) {
+                Image img = new ImageIcon(p.getImagen())
+                        .getImage()
+                        .getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+                icono = new ImageIcon(img);
+            }
+
+            JLabel lblImg;
+
+            // 2. Si tiene imagen BD 
+            if (icono != null) {
+                lblImg = new JLabel(icono);
+            } else {
+                // 3. Evitar NULL en el tipo
+                String tipo = (p.getTipo() == null) ? "" : p.getTipo().toLowerCase();
+                // 4. Seleccionar ruta por tipo
+                String ruta;
+
+                switch (tipo) {
+                    case "mp3":
+                    case "cancion":
+                    case "canción":   // con tilde
+                        ruta = "/Img/mp3.png";
+                        break;
+
+                    case "vinilo":
+                    case "disco":
+                    case "vinilo mp3":
+                    case "disco mp3":
+                        ruta = "/Img/disco.png";
+                        break;
+
+                    default:
+                        ruta = "/Img/mp3.png"; // fallback seguro
+                        break;
+                }
+
+                // 5. Cargar imagen (segura)
+                java.net.URL url = getClass().getResource(ruta);
+
+                if (url == null) {
+                    System.out.println("No se encontró la imagen: " + ruta);
+                    lblImg = new JLabel("No img");
+                } else {
+                    ImageIcon defaultIcon = new ImageIcon(url);
+                    Image imgDef = defaultIcon.getImage()
+                            .getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+                    lblImg = new JLabel(new ImageIcon(imgDef));
+                }
+            }
+
+            modelo.addRow(new Object[]{
+                p.getId(),
+                p.getTipo(),
+                p.getNombre(),
+                p.getArtista(),
+                p.getGenero(),
+                p.getPrecio(),
+                lblImg
+            });
+        }
     }
-}
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-    /* Set the Nimbus look and feel */
-    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-     */
-    try {
-        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-            if ("Nimbus".equals(info.getName())) {
-                javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                break;
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
             }
+        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+            logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
-    } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-        logger.log(java.util.logging.Level.SEVERE, null, ex);
-    }
-    //</editor-fold>
+        //</editor-fold>
 
-    /* Create and display the form */
-    java.awt.EventQueue.invokeLater(() -> new Comprador().setVisible(true));
-}
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> new Comprador().setVisible(true));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
@@ -1133,20 +1279,21 @@ public class Comprador extends javax.swing.JFrame {
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnHistorialDeCompras;
     private javax.swing.JButton btnMisRecopilaciones;
+    private javax.swing.JButton btnNueva;
     private javax.swing.JButton btnPagar;
     private javax.swing.JLabel imgNotificacion;
     private javax.swing.JLabel imglogoC;
     private javax.swing.JLabel imglogolabelC;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
@@ -1159,10 +1306,13 @@ public class Comprador extends javax.swing.JFrame {
     private javax.swing.JLabel jlCrearCuenta3;
     private javax.swing.JLabel jlCrearCuenta4;
     private javax.swing.JLabel jlCrearCuenta5;
+    private javax.swing.JLabel jlCrearCuenta6;
     private javax.swing.JPanel jpComprador;
     private javax.swing.JPanel jpFondoComp;
     private javax.swing.JLabel lbComprador;
     private javax.swing.JLabel lbUsuarioComp;
+    private javax.swing.JList<String> listaComprador;
+    private javax.swing.JList<String> listaPublica;
     private javax.swing.JRadioButton rdDavi;
     private javax.swing.JRadioButton rdNequi;
     private javax.swing.JRadioButton rdPse;

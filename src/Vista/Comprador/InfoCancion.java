@@ -21,7 +21,6 @@ public class InfoCancion extends javax.swing.JFrame {
         initComponents();
 
         btnCarrito.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnReco.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         // Cargar datos del vinilo (labels e imagen)
         cargarDatosCancion();
@@ -51,7 +50,6 @@ public class InfoCancion extends javax.swing.JFrame {
         lbPrecio = new javax.swing.JLabel();
         lbNombre = new javax.swing.JLabel();
         btnCarrito = new javax.swing.JButton();
-        btnReco = new javax.swing.JButton();
         lbVendedor6 = new javax.swing.JLabel();
         lbVendedor7 = new javax.swing.JLabel();
         lbCalidad = new javax.swing.JLabel();
@@ -106,9 +104,6 @@ public class InfoCancion extends javax.swing.JFrame {
                 btnCarritoActionPerformed(evt);
             }
         });
-
-        btnReco.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/musica.png"))); // NOI18N
-        btnReco.setText("Agregar a recopilacion");
 
         lbVendedor6.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lbVendedor6.setText("Duración:");
@@ -171,9 +166,7 @@ public class InfoCancion extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(lbPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnReco, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnCarrito, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnCarrito, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
@@ -207,18 +200,20 @@ public class InfoCancion extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lbVendedor5)
                             .addComponent(lbTamanio))))
-                .addGap(13, 13, 13)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbVendedor7)
-                    .addComponent(lbCalidad)
-                    .addComponent(btnCarrito, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnReco, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lbVendedor4)
-                        .addComponent(lbPrecio)))
-                .addContainerGap(23, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbVendedor7)
+                            .addComponent(lbCalidad))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbVendedor4)
+                            .addComponent(lbPrecio)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(35, 35, 35)
+                        .addComponent(btnCarrito, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 450, 380));
@@ -311,7 +306,6 @@ public class InfoCancion extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCarrito;
-    private javax.swing.JButton btnReco;
     private javax.swing.JLabel imagenDisco;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator1;
