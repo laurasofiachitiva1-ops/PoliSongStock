@@ -121,7 +121,6 @@ public class CarritoDAO {
         return lista;
     }
 
-    /*// Método para eliminar un item del carrito
     public boolean eliminarItemCarrito(int idItem) {
         String sql = "DELETE FROM items_carrito WHERE id_item = ?";
 
@@ -139,9 +138,7 @@ public class CarritoDAO {
         }
     }
 
-    // Método para modificar un item del carrito (por ejemplo, cantidad)
     public boolean modificarItemCarrito(Carrito carrito) {
-        // Si se descomenta y usa, actualizar para incluir id_vendedor si es necesario
         String sql = "UPDATE items_carrito SET id_vendedor = ?, cantidad = ?, precio_unitario = ?, estado = ? WHERE id_item = ?";
 
         try {
@@ -166,7 +163,7 @@ public class CarritoDAO {
             } catch (SQLException e) {
             }
         }
-    }*/
+    }
 
     // Método para marcar el carrito de un comprador como pagado (cambia estado a 'pagado')
     public boolean marcarCarritoPagado(int idComprador) {

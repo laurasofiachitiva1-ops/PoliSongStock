@@ -1,10 +1,10 @@
 package Vista;
 
-import Vista.Comprador.Comprador;
-import Vista.Vendedor.Vendedor;
 import Modelo.CompradorDAO;
 import Modelo.Sesion;
 import Modelo.VendedorDAO;
+import Vista.Comprador.Comprador;
+import Vista.Vendedor.Vendedor;
 import javax.swing.JOptionPane;
 
 
@@ -56,7 +56,7 @@ public class Login extends javax.swing.JFrame {
             
             Sesion.setIdComprador(c.getId_comprador());//Guardar el id del comprador
   
-            Comprador comprador = new Comprador();
+            Comprador comprador = new Comprador ();
             comprador.setVisible(true);
             comprador.setLocationRelativeTo(null);
             comprador.setResizable(false);
