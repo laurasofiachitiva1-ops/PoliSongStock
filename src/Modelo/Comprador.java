@@ -7,7 +7,9 @@ public class Comprador {
     private String direccion;
     private String password;
     private int compras;
-
+    
+    
+    
     public Comprador() {
     }
 

@@ -28,20 +28,108 @@ import Modelo.Detalle_ventaDAO;
 import Modelo.ListaRenderer;
 import Modelo.Lista_reproduccion;
 import Modelo.Lista_reproduccionDAO;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.awt.Component;
+import java.io.FileOutputStream;
 import java.util.List;
+import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
+import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.text.Document;
 
 public class Comprador extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Comprador.class.getName());
+
+    // Clases para el botón en la tabla (ButtonRenderer y ButtonEditor)
+    class ButtonRenderer extends JButton implements TableCellRenderer {
+
+        public ButtonRenderer() {
+            setOpaque(true);
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            setText((value == null) ? "" : value.toString());
+            return this;
+        }
+    }
+
+    class ButtonEditor extends DefaultCellEditor {
+
+        protected JButton button;
+        private String label;
+        private boolean isPushed;
+
+        public ButtonEditor(JCheckBox checkBox) {
+            super(checkBox);
+            button = new JButton();
+            button.setOpaque(true);
+            button.addActionListener(e -> fireEditingStopped());
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            label = (value == null) ? "" : value.toString();
+            button.setText(label);
+            isPushed = true;
+            return button;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            if (isPushed) {
+                // Obtener ID de la venta de la fila actual
+                int row = jTableHistorial.getSelectedRow();  // Cambiado: usa jTableHistorial
+                if (row != -1) {
+                    int idVenta = (Integer) jTableHistorial.getValueAt(row, 0);  // Cambiado: usa jTableHistorial
+                    descargarFacturaPDF(idVenta);
+                }
+            }
+            isPushed = false;
+            return label;
+        }
+
+        @Override
+        public boolean stopCellEditing() {
+            isPushed = false;
+            return super.stopCellEditing();
+        }
+    }
 
     public Comprador() {
         initComponents();
         cargarCatalogo("");
         cargarCarrito();
 
+        // Configurar columnas de jTableHistorial (cambiado de jTable1)
+        jTableHistorial.setModel(new javax.swing.table.DefaultTableModel(
+                new Object[][]{},
+                new String[]{"Pedido", "Fecha", "Producto", "Estado", "Factura"}
+        ));
+
+        // Configurar renderer y editor para la columna "Factura" (índice 4)
+        TableColumn facturaColumn = jTableHistorial.getColumnModel().getColumn(4);  // Cambiado: usa jTableHistorial
+        facturaColumn.setCellRenderer(new ButtonRenderer());
+        facturaColumn.setCellEditor(new ButtonEditor(new JCheckBox()));
+
+        // Centrar datos en columnas (excepto "Factura")
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        for (int i = 0; i < jTableHistorial.getColumnCount() - 1; i++) {  // Excepto la última columna, usa jTableHistorial
+            jTableHistorial.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
+
+        // ... (el resto del constructor, como listeners, etc.)
         this.setSize(960, 525);
 
         // Cursor tipo mano en el boton catalogo
@@ -88,7 +176,7 @@ public class Comprador extends javax.swing.JFrame {
         jTable.getColumnModel().getColumn(6).setCellRenderer(new RenderImagen());
 
         // --- CENTRAR DATOS DEL RESTO DE COLUMNAS ---
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        //DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 
         for (int i = 0; i < jTable.getColumnCount(); i++) {
@@ -109,7 +197,7 @@ public class Comprador extends javax.swing.JFrame {
                         table, value, isSelected, hasFocus, row, column);
                 jTable.getTableHeader().setBackground(new java.awt.Color(89, 89, 89));
 
-                jScrollPane2.getViewport().setBackground(new java.awt.Color(89, 89, 89));
+                jScrollPane5.getViewport().setBackground(new java.awt.Color(89, 89, 89));
                 c.setBackground(new java.awt.Color(89, 89, 89));
                 c.setForeground(Color.WHITE);
                 setHorizontalAlignment(CENTER);
@@ -295,6 +383,66 @@ public class Comprador extends javax.swing.JFrame {
             }
         });
 
+        ///HISTORIAL DE VENTAS////
+        
+
+        jTableHistorial.setModel(new javax.swing.table.DefaultTableModel(
+                new Object[][]{},
+                new String[]{"Pedido", "Fecha", "Producto", "Estado", "Factura"}
+        ));
+
+        // Aumentar la altura de las filas para más espacio vertical
+        jTableHistorial.setRowHeight(70); 
+
+
+        TableColumn HistorialColumn = jTableHistorial.getColumnModel().getColumn(4);
+        HistorialColumn.setCellRenderer(new ButtonRenderer());
+        HistorialColumn.setCellEditor(new ButtonEditor(new JCheckBox()));
+
+
+        DefaultTableCellRenderer centerRendererHistorial = new DefaultTableCellRenderer();
+        centerRendererHistorial.setHorizontalAlignment(JLabel.CENTER);
+        for (int i = 0; i < jTableHistorial.getColumnCount() - 1; i++) {  // Excepto la última columna
+            jTableHistorial.getColumnModel().getColumn(i).setCellRenderer(centerRendererHistorial);
+        }
+
+        javax.swing.table.JTableHeader headerHistorial = jTableHistorial.getTableHeader();
+        headerHistorial.setDefaultRenderer(new javax.swing.table.DefaultTableCellRenderer() {
+            @Override
+            public java.awt.Component getTableCellRendererComponent(
+                    javax.swing.JTable table, Object value, boolean isSelected,
+                    boolean hasFocus, int row, int column) {
+
+                java.awt.Component c = super.getTableCellRendererComponent(
+                        table, value, isSelected, hasFocus, row, column);
+                jTableHistorial.getTableHeader().setBackground(new java.awt.Color(89, 89, 89));
+                jScrollPane5.getViewport().setBackground(new java.awt.Color(89, 89, 89));
+                c.setBackground(new java.awt.Color(89, 89, 89));
+                c.setForeground(Color.WHITE);
+                setHorizontalAlignment(CENTER);
+                return c;
+            }
+        });
+
+        class ButtonRenderer extends JButton implements TableCellRenderer {
+
+            public ButtonRenderer() {
+                setOpaque(true);
+                setBackground(new java.awt.Color(51, 51, 51));  // Fondo oscuro para el botón
+                setForeground(Color.WHITE);  // Texto blanco
+                setBorder(javax.swing.BorderFactory.createRaisedBevelBorder());  // Borde elevado para mejor apariencia
+                setFocusPainted(false);  // Sin borde de foco
+            }
+
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                setText((value == null) ? "" : value.toString());
+                return this;
+            }
+        }
+
+    
+
         cargarListasReproduccion();
 
         // Aplicar renderer con imagen por defecto
@@ -322,7 +470,7 @@ public class Comprador extends javax.swing.JFrame {
             }
         });
 
-    // Agregar listener para listaPublica
+        // Agregar listener para listaPublica
         listaPublica.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -350,6 +498,29 @@ public class Comprador extends javax.swing.JFrame {
                 cargarCarrito();
             } else if (selectedIndex == 3) {
                 cargarListasReproduccion();
+            } else if (jTabbedPane1.getSelectedIndex() == 1) {
+                cargarHistorialCompras();
+            }
+        });
+
+        // En el constructor de Comprador.java, después de configurar jTableHistorial, agrega este listener
+        jTableHistorial.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int fila = jTableHistorial.getSelectedRow();
+                if (fila != -1) {
+                    String estado = jTableHistorial.getValueAt(fila, 3).toString(); // Columna Estado (índice 3)
+                    if ("aceptado".equalsIgnoreCase(estado)) {
+                        int idVenta = (Integer) jTableHistorial.getValueAt(fila, 0); // Columna Pedido (ID venta, índice 0)
+                        // Asumiendo que InfoEnvio es una clase JFrame que toma idVenta como parámetro
+                        InfoEnvio infoEnvio = new InfoEnvio(idVenta);
+                        infoEnvio.setVisible(true);
+                        infoEnvio.setLocationRelativeTo(null);
+                        infoEnvio.setResizable(false);
+                    } else {
+                        JOptionPane.showMessageDialog(Comprador.this, "La venta no está aceptada. No se puede ver la información de envío.");
+                    }
+                }
             }
         });
     }
@@ -382,8 +553,8 @@ public class Comprador extends javax.swing.JFrame {
         btnBuscar = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jlCrearCuenta4 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jTableHistorial = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         jlCrearCuenta3 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -587,22 +758,22 @@ public class Comprador extends javax.swing.JFrame {
         jlCrearCuenta4.setForeground(new java.awt.Color(255, 255, 255));
         jlCrearCuenta4.setText("Historial de compras");
 
-        jTable1.setBackground(new java.awt.Color(204, 204, 204));
-        jTable1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTableHistorial.setBackground(new java.awt.Color(89, 89, 89));
+        jTableHistorial.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Pedido", "Fecha", "Producto", "Estado", "Factura"
+                "ID", "Producto", "Nombre", "Artista", "Género", "Precio", "Imagen"
             }
         ));
-        jTable1.setGridColor(new java.awt.Color(153, 153, 153));
-        jTable1.setSelectionBackground(new java.awt.Color(153, 153, 153));
-        jScrollPane2.setViewportView(jTable1);
+        jTableHistorial.setGridColor(new java.awt.Color(89, 89, 89));
+        jTableHistorial.setSelectionBackground(new java.awt.Color(51, 51, 51));
+        jScrollPane5.setViewportView(jTableHistorial);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -611,10 +782,10 @@ public class Comprador extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 615, Short.MAX_VALUE)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jlCrearCuenta4)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 378, Short.MAX_VALUE))
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 615, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -623,8 +794,8 @@ public class Comprador extends javax.swing.JFrame {
                 .addGap(14, 14, 14)
                 .addComponent(jlCrearCuenta4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jTabbedPane1.addTab("tab4", jPanel4);
@@ -898,6 +1069,97 @@ public class Comprador extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    // En Comprador.java, agrega este método auxiliar para obtener el nombre del producto
+    private String obtenerNombreProducto(int idProducto, String tipo) {
+        try {
+            if ("vinilo".equalsIgnoreCase(tipo)) {
+                Disco_viniloDAO dao = new Disco_viniloDAO();
+                Disco_vinilo v = dao.buscarPorIdV(idProducto);
+                return (v != null) ? v.getNombre() : "Desconocido";
+            } else if ("mp3".equalsIgnoreCase(tipo)) {
+                Disco_mp3DAO dao = new Disco_mp3DAO();
+                Disco_mp3 m = dao.buscarPorIM(idProducto);
+                return (m != null) ? m.getNombre() : "Desconocido";
+            } else if ("cancion".equalsIgnoreCase(tipo) || "canción".equalsIgnoreCase(tipo)) {
+                CancionDAO dao = new CancionDAO();
+                Cancion c = dao.obtenerPorId(idProducto);
+                return (c != null) ? c.getNombre() : "Desconocido";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "Desconocido";
+    }
+
+    private void descargarFacturaPDF(int idVenta) {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setSelectedFile(new java.io.File("Factura_Venta_" + idVenta + ".pdf"));
+        int result = fileChooser.showSaveDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            try {
+                com.itextpdf.text.Document document = new com.itextpdf.text.Document();
+                PdfWriter.getInstance(document, new FileOutputStream(fileChooser.getSelectedFile()));
+                document.open();
+                document.add(new Paragraph("Factura de Venta ID: " + idVenta));
+                VentaDAO ventaDAO = new VentaDAO();
+                Detalle_ventaDAO detalleDAO = new Detalle_ventaDAO();
+                Venta venta = ventaDAO.buscarPorIdVenta(idVenta);
+                if (venta != null) {
+                    document.add(new Paragraph("Fecha: " + venta.getFecha()));
+                    document.add(new Paragraph("Total: " + venta.getTotal()));
+                    document.add(new Paragraph("Método de Pago: " + venta.getMetodo_pago()));
+                    List<Detalle_venta> detalles = detalleDAO.listarDetallesPorVenta(idVenta);
+                    for (Detalle_venta detalle : detalles) {
+                        String nombreProducto = obtenerNombreProducto(detalle.getId_producto(), detalle.getTipo());
+                        document.add(new Paragraph("Producto: " + detalle.getTipo() + "; Nombre: " + nombreProducto + ", Cantidad: " + detalle.getCantidad() + ", Precio: " + detalle.getPrecio_unit()));
+                    }
+                }
+                document.close();
+                JOptionPane.showMessageDialog(this, "PDF descargado exitosamente.");
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al generar PDF: " + e.getMessage());
+            }
+        }
+    }
+
+    // Método para cargar el historial de compras
+    private void cargarHistorialCompras() {
+        int idComprador = Sesion.getIdComprador();
+        if (idComprador == 0) {
+            JOptionPane.showMessageDialog(this, "No hay comprador logueado.");
+            return;
+        }
+
+        VentaDAO ventaDAO = new VentaDAO();
+        Detalle_ventaDAO detalleDAO = new Detalle_ventaDAO();
+
+        List<Venta> ventas = ventaDAO.listarVentasPorComprador(idComprador);
+
+        DefaultTableModel modelo = (DefaultTableModel) jTableHistorial.getModel();  // Cambiado: usa jTableHistorial
+        modelo.setRowCount(0); // Limpiar tabla
+
+        for (Venta venta : ventas) {
+            // Obtener detalles para concatenar productos
+            List<Detalle_venta> detalles = detalleDAO.listarDetallesPorVenta(venta.getId_venta());
+            StringBuilder productos = new StringBuilder();
+            for (Detalle_venta detalle : detalles) {
+                if (productos.length() > 0) {
+                    productos.append(", ");
+                }
+                productos.append(detalle.getTipo()).append(" ID: ").append(detalle.getId_producto());
+            }
+
+            // Agregar fila a la tabla
+            modelo.addRow(new Object[]{
+                venta.getId_venta(), // Pedido (ID venta)
+                venta.getFecha(), // Fecha
+                productos.toString(), // Producto
+                venta.getEstado(), // Estado
+                "Descargar PDF" // Factura (botón)
+            });
+        }
+    }
 
     private int extraerIdDeTexto(String texto) {
         try {
@@ -1289,9 +1551,9 @@ public class Comprador extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JSeparator jSeparator1;
@@ -1299,8 +1561,8 @@ public class Comprador extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTable jTableCarrito;
+    private javax.swing.JTable jTableHistorial;
     private javax.swing.JLabel jlCrearCuenta1;
     private javax.swing.JLabel jlCrearCuenta2;
     private javax.swing.JLabel jlCrearCuenta3;
