@@ -184,4 +184,38 @@ public class Detalle_ventaDAO {
             }
         }
     }
+    
+    
+    public List<Detalle_venta> listarDetallesPorVendedor(int idVendedor) {
+        List<Detalle_venta> lista = new ArrayList<>();
+        String sql = "SELECT * FROM detalle_venta WHERE id_vendedor = ?";
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, idVendedor);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Detalle_venta detalle = new Detalle_venta();
+                detalle.setId_detalle(rs.getInt("id_detalle"));
+                detalle.setId_venta(rs.getInt("id_venta"));
+                detalle.setId_vendedor(rs.getInt("id_vendedor"));
+                detalle.setId_producto(rs.getInt("id_producto"));
+                detalle.setTipo(rs.getString("tipo"));
+                detalle.setCantidad(rs.getInt("cantidad"));
+                detalle.setPrecio_unit(rs.getDouble("precio_unit"));
+                detalle.setTotal(rs.getDouble("total"));
+                lista.add(detalle);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al listar detalles por vendedor: " + e.getMessage());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.toString());
+            }
+        }
+        return lista;
+    }
+    
 }

@@ -7,6 +7,7 @@ import Modelo.CarritoDAO;
 import Modelo.Disco_vinilo;
 import Modelo.Disco_viniloDAO;
 import Modelo.Sesion;
+import Modelo.VendedorDAO;
 import java.awt.Image;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -43,7 +44,7 @@ public class InfoVinilo extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        lbVendedor = new javax.swing.JLabel();
+        lbtitulo = new javax.swing.JLabel();
         lbVendedor2 = new javax.swing.JLabel();
         lbVendedor9 = new javax.swing.JLabel();
         lbVendedor5 = new javax.swing.JLabel();
@@ -60,14 +61,16 @@ public class InfoVinilo extends javax.swing.JFrame {
         lbPrecio = new javax.swing.JLabel();
         lbNombre = new javax.swing.JLabel();
         btnCarrito = new javax.swing.JButton();
+        lbVendedor11 = new javax.swing.JLabel();
+        lbVendedor = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(89, 89, 89));
 
-        lbVendedor.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        lbVendedor.setText("Info del vinilo");
+        lbtitulo.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lbtitulo.setText("Info del vinilo");
 
         lbVendedor2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lbVendedor2.setText("Artista:");
@@ -121,6 +124,12 @@ public class InfoVinilo extends javax.swing.JFrame {
             }
         });
 
+        lbVendedor11.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lbVendedor11.setText("Vendedor:");
+
+        lbVendedor.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lbVendedor.setText("texto");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -166,8 +175,13 @@ public class InfoVinilo extends javax.swing.JFrame {
                                 .addComponent(btnCarrito, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(106, 106, 106))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbVendedor)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lbtitulo)
+                                .addGap(86, 86, 86)
+                                .addComponent(lbVendedor11)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lbVendedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 422, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
@@ -175,7 +189,10 @@ public class InfoVinilo extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lbVendedor)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbtitulo)
+                    .addComponent(lbVendedor11)
+                    .addComponent(lbVendedor))
                 .addGap(10, 10, 10)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -250,13 +267,13 @@ public class InfoVinilo extends javax.swing.JFrame {
         carrito.setId_comprador(Sesion.getIdComprador());
         carrito.setTipo("vinilo");
         carrito.setId_producto(idVinilo);
-        carrito.setCantidad(cantidad); 
+        carrito.setCantidad(cantidad);
         carrito.setPrecio_unitario(v.getPrecio());
         carrito.setFecha_agregado(new java.sql.Date(System.currentTimeMillis()));
-        carrito.setEstado("activo");  
+        carrito.setEstado("activo");
 
         // Agregar el id_vendedor capturado desde el vinilo
-        carrito.setId_vendedor(v.getId_vendedor());  
+        carrito.setId_vendedor(v.getId_vendedor());
 
         // Agregar al carrito usando el DAO
         CarritoDAO carritoDAO = new CarritoDAO();
@@ -285,6 +302,7 @@ public class InfoVinilo extends javax.swing.JFrame {
         jLista.setModel(modelo);
     }
 
+
     private void cargarDatosVinilo() {
         Disco_viniloDAO dao = new Disco_viniloDAO();
         Disco_vinilo v = dao.buscarPorIdV(idVinilo);
@@ -298,6 +316,16 @@ public class InfoVinilo extends javax.swing.JFrame {
         lbAnio.setText(String.valueOf(v.getAnio_salida()));
         lbPrecio.setText("$" + String.valueOf(v.getPrecio()));  // Agregado: formato con $
         lbArtista.setText(v.getAutorNombre());
+
+        // Obtener el nombre del vendedor
+        VendedorDAO vendedorDAO = new VendedorDAO();
+        Modelo.Vendedor vendedor = vendedorDAO.buscarPorId(v.getId_vendedor());
+        if (vendedor != null) {
+            lbVendedor.setText(vendedor.getNombre());
+        } else {
+            lbVendedor.setText("Desconocido");
+        }
+
         // Obtener y setear la imagen del disco
         if (v.getImagen() != null) {
             // Si hay imagen en la BD, cargarla y escalarla
@@ -324,6 +352,8 @@ public class InfoVinilo extends javax.swing.JFrame {
             }
         }
     }
+
+
 
     /**
      * @param args the command line arguments
@@ -364,10 +394,12 @@ public class InfoVinilo extends javax.swing.JFrame {
     private javax.swing.JLabel lbPrecio;
     private javax.swing.JLabel lbVendedor;
     private javax.swing.JLabel lbVendedor10;
+    private javax.swing.JLabel lbVendedor11;
     private javax.swing.JLabel lbVendedor2;
     private javax.swing.JLabel lbVendedor3;
     private javax.swing.JLabel lbVendedor4;
     private javax.swing.JLabel lbVendedor5;
     private javax.swing.JLabel lbVendedor9;
+    private javax.swing.JLabel lbtitulo;
     // End of variables declaration//GEN-END:variables
 }

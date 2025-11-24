@@ -188,4 +188,89 @@ public class VentaDAO {
             }
         }
     }
+
+    // Método para listar ventas donde al menos un producto sea del vendedor
+    public List<Venta> listarVentasPorVendedor(int idVendedor) {
+        List<Venta> lista = new ArrayList<>();
+        String sql = "SELECT DISTINCT v.* FROM ventas v INNER JOIN detalle_venta dv ON v.id_venta = dv.id_venta WHERE dv.id_vendedor = ?";
+
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, idVendedor);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Venta venta = new Venta();
+                venta.setId_venta(rs.getInt("id_venta"));
+                venta.setId_comprador(rs.getInt("id_comprador"));
+                venta.setFecha(rs.getDate("fecha"));
+                venta.setTotal(rs.getDouble("total"));
+                venta.setMetodo_pago(rs.getString("metodo_pago"));
+                venta.setEstado(rs.getString("estado"));
+                venta.setObservacion(rs.getString("observacion"));
+                lista.add(venta);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al listar ventas por vendedor: " + e.getMessage());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.toString());
+            }
+        }
+        return lista;
+    }
+
+    public int contarVentasAceptadasPorComprador(int idComprador) {
+        int count = 0;
+        String sql = "SELECT COUNT(*) AS total FROM ventas WHERE id_comprador = ? AND estado = 'aceptado'";
+
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, idComprador);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al contar ventas aceptadas por comprador: " + e.getMessage());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.toString());
+            }
+        }
+        return count;
+    }
+
+    public boolean actualizarEstadoYObservacion(int idVenta, String nuevoEstado, String nuevaObservacion) {
+        // Validación básica de parámetros
+        if (idVenta <= 0 || nuevoEstado == null || nuevaObservacion == null) {
+            JOptionPane.showMessageDialog(null, "Parámetros inválidos para actualizar venta.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        String sql = "UPDATE ventas SET estado = ?, observacion = ? WHERE id_venta = ?";
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, nuevoEstado);
+            ps.setString(2, nuevaObservacion);
+            ps.setInt(3, idVenta);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al actualizar estado y observación de la venta:\n" + e.getMessage(), "Error SQL", JOptionPane.ERROR_MESSAGE);
+            return false;
+        } finally {
+            try {
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                System.out.println(e.toString());
+            }
+        }
+    }
 }

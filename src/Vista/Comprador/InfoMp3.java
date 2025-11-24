@@ -7,6 +7,7 @@ import Modelo.CarritoDAO;
 import Modelo.Disco_mp3;
 import Modelo.Disco_mp3DAO;
 import Modelo.Sesion;
+import Modelo.VendedorDAO;
 import java.awt.Image;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -42,7 +43,7 @@ public class InfoMp3 extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        lbVendedor = new javax.swing.JLabel();
+        lbTexto = new javax.swing.JLabel();
         lbVendedor2 = new javax.swing.JLabel();
         lbVendedor9 = new javax.swing.JLabel();
         lbVendedor5 = new javax.swing.JLabel();
@@ -59,14 +60,16 @@ public class InfoMp3 extends javax.swing.JFrame {
         lbPrecio = new javax.swing.JLabel();
         lbNombre = new javax.swing.JLabel();
         btnCarrito = new javax.swing.JButton();
+        lbVendedor11 = new javax.swing.JLabel();
+        lbVendedor1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(89, 89, 89));
 
-        lbVendedor.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        lbVendedor.setText("Info del MP3");
+        lbTexto.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lbTexto.setText("Info del MP3");
 
         lbVendedor2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lbVendedor2.setText("Artista:");
@@ -120,6 +123,12 @@ public class InfoMp3 extends javax.swing.JFrame {
             }
         });
 
+        lbVendedor11.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lbVendedor11.setText("Vendedor:");
+
+        lbVendedor1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lbVendedor1.setText("texto");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -164,18 +173,28 @@ public class InfoMp3 extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(btnCarrito, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(106, 106, 106))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbVendedor)
-                            .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 422, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(lbTexto)
+                            .addGap(98, 98, 98)
+                            .addComponent(lbVendedor11)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(lbVendedor1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 422, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lbVendedor)
-                .addGap(10, 10, 10)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lbTexto)
+                        .addGap(10, 10, 10))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbVendedor11)
+                            .addComponent(lbVendedor1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -264,7 +283,7 @@ public class InfoMp3 extends javax.swing.JFrame {
         jLista.setModel(modelo);
     }
 
-    private void cargarDatosMp3() {
+   private void cargarDatosMp3() {
         Disco_mp3DAO dao = new Disco_mp3DAO();
         Disco_mp3 m = dao.buscarPorIM(idMp3);
         if (m == null) {
@@ -276,7 +295,16 @@ public class InfoMp3 extends javax.swing.JFrame {
         lbAnio.setText(String.valueOf(m.getAnio_salida()));
         lbPrecio.setText("$" + String.valueOf(m.getPrecio())); 
         lbArtista.setText(m.getAutorNombre());
-        // Obtener y setear la imagen del disco
+        
+        // Obtener el nombre del vendedor
+        VendedorDAO vendedorDAO = new VendedorDAO();
+        Modelo.Vendedor vendedor = vendedorDAO.buscarPorId(m.getId_vendedor());
+        if (vendedor != null) {
+            lbVendedor1.setText(vendedor.getNombre());
+        } else {
+            lbVendedor1.setText("Desconocido");
+        }
+ 
         if (m.getImagen() != null) {
             // Si hay imagen en la BD, cargarla y escalarla
             ImageIcon icono = new ImageIcon(m.getImagen());
@@ -287,7 +315,7 @@ public class InfoMp3 extends javax.swing.JFrame {
             );
             imagenDisco.setIcon(new ImageIcon(img));
         } else {
-            // Si no hay imagen, asignar la por defecto en src/Img/disco.png
+            // Si no hay imagen, asignar la por defecto en src/Img/mp3.png
             try {
                 ImageIcon iconoDefecto = new ImageIcon(getClass().getResource("/Img/mp3.png"));
                 Image img = iconoDefecto.getImage().getScaledInstance(
@@ -310,8 +338,7 @@ public class InfoMp3 extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.hlbTexto    */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -340,8 +367,10 @@ public class InfoMp3 extends javax.swing.JFrame {
     private javax.swing.JLabel lbGenero;
     private javax.swing.JLabel lbNombre;
     private javax.swing.JLabel lbPrecio;
-    private javax.swing.JLabel lbVendedor;
+    private javax.swing.JLabel lbTexto;
+    private javax.swing.JLabel lbVendedor1;
     private javax.swing.JLabel lbVendedor10;
+    private javax.swing.JLabel lbVendedor11;
     private javax.swing.JLabel lbVendedor2;
     private javax.swing.JLabel lbVendedor3;
     private javax.swing.JLabel lbVendedor4;

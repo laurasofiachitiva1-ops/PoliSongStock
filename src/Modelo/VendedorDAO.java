@@ -83,5 +83,33 @@ public class VendedorDAO {
             }
         }
     }
+    
+     public Vendedor buscarPorId(int idVendedor) {
+        Vendedor v = null;
+        String sql = "SELECT * FROM vendedor WHERE id_vendedor = ?";
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, idVendedor);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                v = new Vendedor();
+                v.setId_vendedor(rs.getInt("id_vendedor"));
+                v.setNombre(rs.getString("nombre"));
+                v.setCorreo(rs.getString("correo"));
+                v.setDireccion(rs.getString("direccion"));
+                v.setPassword(rs.getString("password"));
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al buscar vendedor por ID: " + e.getMessage());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.toString());
+            }
+        }
+        return v;
+    }
 
 }

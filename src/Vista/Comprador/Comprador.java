@@ -28,6 +28,7 @@ import Modelo.Detalle_ventaDAO;
 import Modelo.ListaRenderer;
 import Modelo.Lista_reproduccion;
 import Modelo.Lista_reproduccionDAO;
+import Vista.Vendedor.InfoPedido;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.awt.Component;
@@ -206,14 +207,10 @@ public class Comprador extends javax.swing.JFrame {
         });
 
         // Configuración de estilo para jTableCarrito (igual a jTable)
-        jTableCarrito.setRowHeight(60);  // Alto de fila igual
-        jTableCarrito.setGridColor(new java.awt.Color(89, 89, 89));  // Color de rejilla igual
-        jTableCarrito.setSelectionBackground(new java.awt.Color(51, 51, 51));  // Fondo de selección igual
-
         jTableCarrito.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][]{}, // Cambiado: vacío
-                new String[]{ // Cambiado: 6 columnas
-                    "ID", "Producto", "Nombre", "Cantidad", "Precio Unitario", "Total"
+                new String[]{ // Cambiado: agregar "ID Vendedor"
+                    "ID", "Producto", "Nombre", "Cantidad", "Precio Unitario", "Total", "ID Vendedor"
                 }
         ));
 
@@ -392,13 +389,11 @@ public class Comprador extends javax.swing.JFrame {
         ));
 
         // Aumentar la altura de las filas para más espacio vertical
-        jTableHistorial.setRowHeight(70); 
-
+        jTableHistorial.setRowHeight(70);
 
         TableColumn HistorialColumn = jTableHistorial.getColumnModel().getColumn(4);
         HistorialColumn.setCellRenderer(new ButtonRenderer());
         HistorialColumn.setCellEditor(new ButtonEditor(new JCheckBox()));
-
 
         DefaultTableCellRenderer centerRendererHistorial = new DefaultTableCellRenderer();
         centerRendererHistorial.setHorizontalAlignment(JLabel.CENTER);
@@ -441,7 +436,41 @@ public class Comprador extends javax.swing.JFrame {
             }
         }
 
-    
+        jTableHistorial.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int fila = jTableHistorial.getSelectedRow();
+                if (fila != -1) {
+                    // Corrige el cast directo por una conversión segura
+                    int idVenta = Integer.parseInt(jTableHistorial.getValueAt(fila, 0).toString()); // Columna Pedido (ID venta, índice 0)
+                    String estado = jTableHistorial.getValueAt(fila, 3).toString(); // Columna Estado (índice 3)
+
+                    // Obtener detalles de la venta para verificar si hay vinilos
+                    Detalle_ventaDAO detalleDAO = new Detalle_ventaDAO();
+                    List<Detalle_venta> detalles = detalleDAO.listarDetallesPorVenta(idVenta);
+                    boolean tieneVinilos = detalles.stream().anyMatch(d -> "vinilo".equalsIgnoreCase(d.getTipo()));
+
+                    if (tieneVinilos) {
+                        if ("aceptado".equalsIgnoreCase(estado)) {
+                            // Obtener el primer vinilo de los detalles (asumiendo que hay al menos uno)
+                            Detalle_venta viniloDetalle = detalles.stream()
+                                    .filter(d -> "vinilo".equalsIgnoreCase(d.getTipo()))
+                                    .findFirst()
+                                    .orElse(null);
+                            if (viniloDetalle != null) {
+                                // Nuevo: Crear y mostrar un diálogo inline para confirmar recepción
+                                mostrarDialogoConfirmacion(idVenta);
+                                // Después de cerrar el diálogo, recarga el historial para actualizar el estado
+                                cargarHistorialCompras();
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(Comprador.this, "La venta no está aceptada. No se puede confirmar recepción.");
+                        }
+                    }
+                    // Si no tiene vinilos, no hacer nada
+                }
+            }
+        });
 
         cargarListasReproduccion();
 
@@ -502,27 +531,6 @@ public class Comprador extends javax.swing.JFrame {
                 cargarHistorialCompras();
             }
         });
-
-        // En el constructor de Comprador.java, después de configurar jTableHistorial, agrega este listener
-        jTableHistorial.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                int fila = jTableHistorial.getSelectedRow();
-                if (fila != -1) {
-                    String estado = jTableHistorial.getValueAt(fila, 3).toString(); // Columna Estado (índice 3)
-                    if ("aceptado".equalsIgnoreCase(estado)) {
-                        int idVenta = (Integer) jTableHistorial.getValueAt(fila, 0); // Columna Pedido (ID venta, índice 0)
-                        // Asumiendo que InfoEnvio es una clase JFrame que toma idVenta como parámetro
-                        InfoEnvio infoEnvio = new InfoEnvio(idVenta);
-                        infoEnvio.setVisible(true);
-                        infoEnvio.setLocationRelativeTo(null);
-                        infoEnvio.setResizable(false);
-                    } else {
-                        JOptionPane.showMessageDialog(Comprador.this, "La venta no está aceptada. No se puede ver la información de envío.");
-                    }
-                }
-            }
-        });
     }
 
     @SuppressWarnings("unchecked")
@@ -542,7 +550,6 @@ public class Comprador extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JSeparator();
         jSeparator3 = new javax.swing.JSeparator();
         imglogolabelC = new javax.swing.JLabel();
-        imgNotificacion = new javax.swing.JLabel();
         imglogoC = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
@@ -682,8 +689,6 @@ public class Comprador extends javax.swing.JFrame {
         jSeparator3.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         imglogolabelC.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/Letra soplisong.png"))); // NOI18N
-
-        imgNotificacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/logo noti.png"))); // NOI18N
 
         imglogoC.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/Logo PoliSong 150 px.png"))); // NOI18N
 
@@ -1033,29 +1038,22 @@ public class Comprador extends javax.swing.JFrame {
                             .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jpFondoCompLayout.createSequentialGroup()
                             .addGap(298, 298, 298)
-                            .addGroup(jpFondoCompLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jpFondoCompLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 633, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jpFondoCompLayout.createSequentialGroup()
                                     .addComponent(imglogoC, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(imglogolabelC, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(303, 303, 303)
-                                    .addComponent(imgNotificacion, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addComponent(imglogolabelC, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 627, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(568, Short.MAX_VALUE))
         );
         jpFondoCompLayout.setVerticalGroup(
             jpFondoCompLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpFondoCompLayout.createSequentialGroup()
-                .addGroup(jpFondoCompLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpFondoCompLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(imgNotificacion, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jpFondoCompLayout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addGroup(jpFondoCompLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(imglogolabelC, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(imglogoC, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(12, 12, 12)
+                .addGroup(jpFondoCompLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(imglogolabelC, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(imglogoC, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1069,6 +1067,45 @@ public class Comprador extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void mostrarDialogoConfirmacion(int idVenta) {
+        // Crear el diálogo
+        javax.swing.JDialog dialogo = new javax.swing.JDialog(Comprador.this, "Confirmar Recepción", true);
+        dialogo.setSize(400, 250);
+        dialogo.setLayout(new java.awt.FlowLayout());
+        dialogo.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        // Etiqueta y campo para observación
+        javax.swing.JLabel lblObservacion = new javax.swing.JLabel("Observación del producto:");
+        javax.swing.JTextArea txtObservacion = new javax.swing.JTextArea(5, 30);
+        txtObservacion.setLineWrap(true);
+        txtObservacion.setWrapStyleWord(true);
+        javax.swing.JScrollPane scrollObservacion = new javax.swing.JScrollPane(txtObservacion);
+
+        // Botón para confirmar
+        javax.swing.JButton btnConfirmar = new javax.swing.JButton("Confirmar Recepción");
+        btnConfirmar.addActionListener(e -> {
+            String observacion = txtObservacion.getText().trim();
+            // Actualizar el estado de la venta a "entregado" y agregar observación
+            VentaDAO ventaDAO = new VentaDAO();
+            if (ventaDAO.actualizarEstadoYObservacion(idVenta, "entregado", observacion)) {
+                JOptionPane.showMessageDialog(dialogo, "Recepción confirmada. Estado actualizado a 'entregado'.");
+                
+                dialogo.dispose();  // Cierra el diálogo
+            } else {
+                JOptionPane.showMessageDialog(dialogo, "Error al actualizar la venta.");
+            }
+        });
+
+        // Agregar componentes al diálogo
+        dialogo.add(lblObservacion);
+        dialogo.add(scrollObservacion);
+        dialogo.add(btnConfirmar);
+
+        // Centrar y mostrar el diálogo
+        dialogo.setLocationRelativeTo(Comprador.this);
+        dialogo.setVisible(true);
+    }
 
     // En Comprador.java, agrega este método auxiliar para obtener el nombre del producto
     private String obtenerNombreProducto(int idProducto, String tipo) {
@@ -1218,6 +1255,9 @@ public class Comprador extends javax.swing.JFrame {
             double total = c.getCantidad() * c.getPrecio_unitario();
             totalGeneral += total;  // Sumar al total general
 
+            // Obtener id_vendedor
+            int idVendedor = obtenerIdVendedorPorProducto(c.getId_producto(), c.getTipo());
+
             // Obtener nombre según tipo (código existente)
             if ("vinilo".equalsIgnoreCase(c.getTipo())) {
                 Disco_viniloDAO dvDao = new Disco_viniloDAO();
@@ -1245,7 +1285,8 @@ public class Comprador extends javax.swing.JFrame {
                 nombreProducto,
                 c.getCantidad(),
                 c.getPrecio_unitario(),
-                total
+                total,
+                idVendedor // Nueva columna: ID Vendedor
             });
         }
 
@@ -1345,6 +1386,33 @@ public class Comprador extends javax.swing.JFrame {
         VentaDAO ventaDao = new VentaDAO();
         Detalle_ventaDAO detalleDao = new Detalle_ventaDAO();
 
+        // Verificar que todos los productos sean del mismo vendedor
+        int idVendedorEsperado = -1;
+        boolean mismoVendedor = true;
+        for (int i = 0; i < jTableCarrito.getRowCount(); i++) {
+            int idItem = (Integer) jTableCarrito.getValueAt(i, 0);
+            Carrito item = carritoDao.buscarPorIdItem(idItem);
+            if (item == null) {
+                JOptionPane.showMessageDialog(this, "Error al obtener item del carrito.");
+                return;
+            }
+            int idVendedorProducto = obtenerIdVendedorPorProducto(item.getId_producto(), item.getTipo());
+            if (idVendedorProducto == -1) {
+                JOptionPane.showMessageDialog(this, "Error al obtener vendedor para " + item.getTipo() + ".");
+                return;
+            }
+            if (idVendedorEsperado == -1) {
+                idVendedorEsperado = idVendedorProducto;
+            } else if (idVendedorProducto != idVendedorEsperado) {
+                mismoVendedor = false;
+                break;
+            }
+        }
+        if (!mismoVendedor) {
+            JOptionPane.showMessageDialog(this, "Todos los productos deben ser del mismo vendedor para realizar la compra.");
+            return;
+        }
+
         // Calcular total general del carrito usando streams para mayor eficiencia
         double totalGeneral = java.util.stream.IntStream.range(0, jTableCarrito.getRowCount())
                 .mapToObj(i -> {
@@ -1410,6 +1478,8 @@ public class Comprador extends javax.swing.JFrame {
 
         // Mensaje de éxito
         JOptionPane.showMessageDialog(this, "Venta realizada exitosamente.");
+
+
     }//GEN-LAST:event_btnPagarActionPerformed
 
     private void btnNuevaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaActionPerformed
@@ -1543,7 +1613,6 @@ public class Comprador extends javax.swing.JFrame {
     private javax.swing.JButton btnMisRecopilaciones;
     private javax.swing.JButton btnNueva;
     private javax.swing.JButton btnPagar;
-    private javax.swing.JLabel imgNotificacion;
     private javax.swing.JLabel imglogoC;
     private javax.swing.JLabel imglogolabelC;
     private javax.swing.JLabel jLabel1;

@@ -5,6 +5,7 @@ import Modelo.CancionDAO;
 import Modelo.Carrito;
 import Modelo.CarritoDAO;
 import Modelo.Sesion;
+import Modelo.VendedorDAO;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 
@@ -36,7 +37,7 @@ public class InfoCancion extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        lbVendedor = new javax.swing.JLabel();
+        lbtexto = new javax.swing.JLabel();
         lbVendedor2 = new javax.swing.JLabel();
         lbVendedor9 = new javax.swing.JLabel();
         lbVendedor5 = new javax.swing.JLabel();
@@ -54,14 +55,16 @@ public class InfoCancion extends javax.swing.JFrame {
         lbVendedor7 = new javax.swing.JLabel();
         lbCalidad = new javax.swing.JLabel();
         lbTamanio = new javax.swing.JLabel();
+        lbVendedor11 = new javax.swing.JLabel();
+        lbVendedor = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(89, 89, 89));
 
-        lbVendedor.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        lbVendedor.setText("Info de la canción");
+        lbtexto.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lbtexto.setText("Info de la canción");
 
         lbVendedor2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lbVendedor2.setText("Artista:");
@@ -117,6 +120,12 @@ public class InfoCancion extends javax.swing.JFrame {
         lbTamanio.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         lbTamanio.setText("texto");
 
+        lbVendedor11.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lbVendedor11.setText("Vendedor:");
+
+        lbVendedor.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lbVendedor.setText("texto");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -152,9 +161,14 @@ public class InfoCancion extends javax.swing.JFrame {
                         .addGap(103, 103, 103))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbVendedor)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lbtexto)
+                                .addGap(59, 59, 59)
+                                .addComponent(lbVendedor11)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lbVendedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 422, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -173,7 +187,11 @@ public class InfoCancion extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lbVendedor)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbtexto)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lbVendedor11)
+                        .addComponent(lbVendedor)))
                 .addGap(10, 10, 10)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -269,6 +287,14 @@ public class InfoCancion extends javax.swing.JFrame {
         lbCalidad.setText(String.valueOf(c.getCalidad_kbps()));
         lbPrecio.setText("$" + String.valueOf(c.getPrecio()));
 
+        // Obtener el nombre del vendedor
+        VendedorDAO vendedorDAO = new VendedorDAO();
+        Modelo.Vendedor vendedor = vendedorDAO.buscarPorId(c.getId_vendedor());
+        if (vendedor != null) {
+            lbVendedor.setText(vendedor.getNombre());
+        } else {
+            lbVendedor.setText("Desconocido");
+        }
         ImageIcon iconoActual = (ImageIcon) imagenDisco.getIcon();
         Image img = iconoActual.getImage().getScaledInstance(
                 166, // Ancho fijo
@@ -276,7 +302,6 @@ public class InfoCancion extends javax.swing.JFrame {
                 Image.SCALE_SMOOTH
         );
         imagenDisco.setIcon(new ImageIcon(img));
-
     }
 
     /**
@@ -318,11 +343,13 @@ public class InfoCancion extends javax.swing.JFrame {
     private javax.swing.JLabel lbTamanio;
     private javax.swing.JLabel lbVendedor;
     private javax.swing.JLabel lbVendedor10;
+    private javax.swing.JLabel lbVendedor11;
     private javax.swing.JLabel lbVendedor2;
     private javax.swing.JLabel lbVendedor4;
     private javax.swing.JLabel lbVendedor5;
     private javax.swing.JLabel lbVendedor6;
     private javax.swing.JLabel lbVendedor7;
     private javax.swing.JLabel lbVendedor9;
+    private javax.swing.JLabel lbtexto;
     // End of variables declaration//GEN-END:variables
 }

@@ -85,4 +85,76 @@ public class CompradorDAO {
         }
     }
 
+    public Comprador buscarPorId(int idComprador) {
+        Comprador c = null;  // Inicializar como null para devolver null si no se encuentra
+        String sql = "SELECT * FROM comprador WHERE id_comprador = ?";
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, idComprador);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                c = new Comprador();
+                c.setId_comprador(rs.getInt("id_comprador"));
+                c.setNombre(rs.getString("nombre"));
+                c.setCorreo(rs.getString("correo"));
+                c.setDireccion(rs.getString("direccion"));
+                c.setPassword(rs.getString("password"));
+                c.setCompras(rs.getInt("compras"));
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al buscar comprador por ID: " + e.getMessage());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.toString());
+            }
+        }
+        return c;  // Devuelve el objeto Comprador o null si no se encuentra
+    }
+
+    public int contarVentasPorComprador(int idComprador) {
+        int count = 0;
+        String sql = "SELECT COUNT(*) AS total FROM ventas WHERE id_comprador = ?";  // Cambié 'venta' a 'ventas'
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, idComprador);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al contar ventas por comprador: " + e.getMessage());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.toString());
+            }
+        }
+        return count;
+    }
+
+    public boolean incrementarCompras(int idComprador) {
+        String sql = "UPDATE comprador SET compras = compras + 1 WHERE id_comprador = ?";
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, idComprador);
+            int rows = ps.executeUpdate();
+            return rows > 0;  // Devuelve true si se actualizó al menos una fila
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al incrementar compras: " + e.getMessage());
+            return false;
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.toString());
+            }
+        }
+    }
+
 }
